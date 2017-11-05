@@ -7,8 +7,8 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="en">Gismeteo Weather Forecast. Real time weather and detailed forecast all round the world</summary>
         <summary lang="ru">Прогноз погоды от ведущего погодного сервиса Gismeteo</summary>
-        <description lang="en"></description>
-        <description lang="ru"></description>
+        <description lang="en">The weather is provided solely for personal non-commercial use.[CR]The weather forecast has been prepared by MapMakers Group Ltd.</description>
+        <description lang="ru">Погода предоставлена исключительно для личного некоммерческого использования.[CR]Прогноз погоды подготовлен НПЦ "Мэп Мейкер".</description>
         <disclaimer lang="en"></disclaimer>
         <disclaimer lang="ru"></disclaimer>
         <language></language>
@@ -18,7 +18,7 @@
         <website>https://www.gismeteo.ru/</website>
         <email>vl.maksime@gmail.com</email>
         <source>https://github.com/vlmaksime/weather.gismeteo</source>
-        <news></news>
+        <news>v0.1.1 (2017-11-05)[CR]- Добавлена совместимость со старыми версиями KODI[CR]- Добавлен вывод погоды на выходные[CR]- Добавлен вывод погоды на 36 часов[CR]- Добавлен выбор языка для получения прогноза</news>
         <assets>
             <icon>icon.png</icon>
         </assets>
