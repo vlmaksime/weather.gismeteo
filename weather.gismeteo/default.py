@@ -24,7 +24,7 @@ def _get_lang():
     lang_id = int(ADDON.getSetting('Language'))
 
     return provider.get_languages()[lang_id]
-    
+
 def _forecast(loc_name, loc_id):
     retry = 0
     data = gismeteo.forecast(loc_id)
@@ -49,13 +49,13 @@ def _select_location(location):
     if (keyboard.isConfirmed() and keyboard.getText() != ''):
         text = keyboard.getText()
         dialog = xbmcgui.Dialog()
-        
+
         for location in gismeteo.cities_search(text):
             if location['kind'] == 'A':
                 location_name = '%s - %s' %(location['name'], LANGUAGE(32301))
             else:
                 location_name = location['name']
-                
+
             if location['district']:
                 labels.append('%s (%s, %s)' % (location_name, location['district'], location['country']))
             else:
@@ -89,7 +89,7 @@ def _get_location(id):
             break
 
     return location_name, location_id
-    
+
 class MyMonitor(xbmc.Monitor):
     def __init__(self, *args, **kwargs):
         xbmc.Monitor.__init__(self)

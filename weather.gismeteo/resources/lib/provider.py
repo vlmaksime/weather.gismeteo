@@ -104,10 +104,10 @@ class Provider:
 
         self.DATE_FORMAT = xbmc.getRegion('dateshort')
         self.TIME_FORMAT = xbmc.getRegion('meridiem')
-        
+
         self.CURRENT_TIME = {'unix': time.time()}
         self.WEEKENDS = self._get_weekends()
-        
+
         self._set_property('Forecast.IsFetched', 'true')
         self._set_property('Current.IsFetched' , 'true')
         self._set_property('Today.IsFetched'   , 'true')
@@ -117,12 +117,12 @@ class Provider:
         self._set_property('Hourly.IsFetched'  , 'true')
         self._set_property('Alerts.IsFetched'  , '')
         self._set_property('Map.IsFetched'     , '')
-        
+
         # WeatherProvider
         # standard properties
         self._set_property('WeatherProvider'    , ADDON_NAME)
         self._set_property('WeatherProviderLogo', xbmc.translatePath(os.path.join(CWD, 'resources', 'media', 'banner.png')))
-    
+
     def _define_constants(self):
         self.WIND_DIRECTIONS = {'1': 71,
                                 '2': 73,
@@ -132,7 +132,7 @@ class Provider:
                                 '6': 81,
                                 '7': 83,
                                 '8': 85}
-        
+
         self.MONTH_NAME_LONG = { '01' : 21,
                                  '02' : 22,
                                  '03' : 23,
@@ -145,7 +145,7 @@ class Provider:
                                  '10' : 30,
                                  '11' : 31,
                                  '12' : 32 }
-        
+
         self.MONTH_NAME_SHORT = { '01' : 51,
                                   '02' : 52,
                                   '03' : 53,
@@ -158,7 +158,7 @@ class Provider:
                                   '10' : 60,
                                   '11' : 61,
                                   '12' : 62 }
-        
+
         self.WEEK_DAY_LONG = { '0' : 17,
                                '1' : 11,
                                '2' : 12,
@@ -166,7 +166,7 @@ class Provider:
                                '4' : 14,
                                '5' : 15,
                                '6' : 16 }
-        
+
         self.WEEK_DAY_SHORT = { '0' : 47,
                                 '1' : 41,
                                 '2' : 42,
@@ -174,7 +174,7 @@ class Provider:
                                 '4' : 44,
                                 '5' : 45,
                                 '6' : 46 }
-        
+
                      # xbmc lang name          # gismeteo code
         self.LANG = { 'afrikaans'             : '',
                       'albanian'              : '',
@@ -377,13 +377,13 @@ class Provider:
 
     def _is_weekend(self, day):
         return (self._get_weekday(day['date'], 'x') in self.WEEKENDS)
-        
+
     def _get_time(self, date):
         if isinstance(date, float):
             date_time = time.localtime(date)
         else:
             date_time = time.localtime(date['unix'])
-            
+
         if self.TIME_FORMAT != '/':
             local_time = time.strftime('%I:%M%p', date_time)
         else:
@@ -417,11 +417,11 @@ class Provider:
             weekends = [5,6]
         else:
             weekends = [6,0]
-        
+
         return weekends
- 
+
     def get_languages(self):
-        
+
         languages = []
         if self.LANG[self.KODI_LANGUAGE] is not '': languages.append(self.LANG[self.KODI_LANGUAGE]) #0
         else: languages.append('en')
@@ -434,12 +434,12 @@ class Provider:
         languages.append('ro') #6
         languages.append('de') #7
         languages.append('pl') #8
-    
+
         return languages
-    
+
     def _get_weekday(self, date, form):
         date_time = time.localtime(date['unix'])
-    
+
         weekday = time.strftime('%w', date_time)
         if form == 's':
             return xbmc.getLocalizedString(self.WEEK_DAY_SHORT[weekday])
@@ -447,10 +447,10 @@ class Provider:
             return xbmc.getLocalizedString(self.WEEK_DAY_LONG[weekday])
         else:
             return int(weekday)
-    
+
     def _get_month(self, date, form):
         date_time = time.localtime(date['unix'])
-    
+
         month = time.strftime('%m', date_time)
         day = time.strftime('%d', date_time)
         if form == 'ds':
@@ -462,7 +462,7 @@ class Provider:
         elif form == 'ml':
             label = xbmc.getLocalizedString(self.MONTH_NAME_LONG[month]) + ' ' + day
         return label
-    
+
     def _get_wind_direction(self, value):
         if self.WIND_DIRECTIONS.get(value) is not None:
             return xbmc.getLocalizedString(self.WIND_DIRECTIONS.get(value))
@@ -471,50 +471,50 @@ class Provider:
 
     def _get_weather_icon(self, item, tod='d'):
         storm = item.get('storm', False)
-    
+
         ph = item.get('ph')
         mist = (ph == 5 or (ph >= 10 and ph <= 12) \
                 or ph == 28 or (ph >= 40 and ph <= 49) \
                 or (ph >= 104 and ph <= 105) or ph == 110 \
                 or ph == 120 or (ph >= 130 and ph <= 135))
-        
+
         cl = item['cloudiness']
         pt = item['precipitation']['type']
         pr = item['precipitation']['intensity']
-    
+
         icon_params = []
-    
+
         if not (cl == '3' or mist):
             icon_params.append(tod)
-    
+
         if cl != '0' and not mist:
             icon_params.append('c%d' % (int(cl) + 1 if cl != '101' else 2))
-    
+
         if pr != '0' and pt != '0':
             icon_params.append('%s%s' % ('r' if pt == '1' else 's' if pt == '2' else 'rs', pr))
-        
+
         if storm:
             icon_params.append('st')
-        
+
         if mist:
             icon_params.append('mist')
-    
+
         icon = '.'.join(icon_params)
-        
+
         if icon == '':
             icon = 'nodata'
-        
+
         return icon
-        
+
     def _get_weather_code(self, item):
-        
+
         #icon = self._get_weather_icon(item, tod)
         weather_code = self.WEATHER_CODES.get(item['icon'], 'na')
-                
+
         return weather_code
-    
+
     def clear(self):
-    
+
         # Current
         # standart properties
         self._set_property('Current.Location'      , '')
@@ -528,7 +528,7 @@ class Provider:
         self._set_property('Current.DewPoint'      , '')
         self._set_property('Current.OutlookIcon'   , '')
         self._set_property('Current.FanartCode'    , '')
-    
+
         # extenden properties
         self._set_property('Current.LowTemperature'       , '')
         self._set_property('Current.HighTemperature'      , '')
@@ -543,12 +543,12 @@ class Provider:
         self._set_property('Current.Precipitation'        , '')
         self._set_property('Current.Cloudiness'           , '')
         self._set_property('Current.ShortOutlook'         , '')
-        
+
         # Today
         # extenden properties
         self._set_property('Today.Sunset'  , '')
         self._set_property('Today.Sunrise' , '')
-    
+
         # Forecast
         # extenden properties
         self._set_property('Forecast.City'      , '')
@@ -556,7 +556,7 @@ class Provider:
         self._set_property('Forecast.Latitude'  , '')
         self._set_property('Forecast.Longitude' , '')
         self._set_property('Forecast.Updated'   , '')
-    
+
         # Day
         # standart properties
         for count in range (0, MAX_DAYS + 1):
@@ -566,7 +566,7 @@ class Provider:
             self._set_property('Day%i.Outlook'     % count, '')
             self._set_property('Day%i.OutlookIcon' % count, '')
             self._set_property('Day%i.FanartCode'  % count, '')
-    
+
         # Daily
         # extenden properties
         for count in range (1, MAX_DAILYS + 1):
@@ -596,7 +596,7 @@ class Provider:
             self._set_property('Daily%i.Rain'            % count, '')
             self._set_property('Daily%i.Snow'            % count, '')
             self._set_property('Daily%i.Precipitation'   % count, '')
-    
+
         # Hourly
         # extenden properties
         for count in range (1, MAX_HOURLY + 1):
@@ -642,18 +642,18 @@ class Provider:
         count_hourly = 0
         count_36hour = 0
         count_weekends = 0
-     
+
         self._set_current_prop(forecast_info)
         self._set_forecast_prop(forecast_info)
         self._set_today_prop(forecast_info)
-    
+
         for day in forecast_info['days']:
 
             if day.get('hourly') is not None:
                 ext_temp = {}
-                
+
                 for hour in day['hourly']:
-                    
+
                     if hour['tod'] == 0:
                         ext_temp['night'] = hour['temperature']['air']
                     elif hour['tod'] == 1:
@@ -662,12 +662,12 @@ class Provider:
                         ext_temp['day'] = hour['temperature']['air']
                     elif hour['tod'] == 3:
                         ext_temp['eve'] = hour['temperature']['air']
- 
+
                     if count_hourly < MAX_HOURLY \
-                      or hour['date']['unix'] >= self.CURRENT_TIME['unix']:
+                      and hour['date']['unix'] >= self.CURRENT_TIME['unix']:
                         self._set_hourly_prop(hour, count_hourly+1 )
                         count_hourly += 1
-                    
+
                     if count_36hour < MAX_36HOUR \
                       and hour['tod'] in [2, 3]:
                         if hour['tod'] == 2 \
@@ -675,9 +675,9 @@ class Provider:
                           or hour['tod'] == 3:
                             self._set_36hour_prop(hour, count_days, hour['tod'], count_36hour+1 )
                             count_36hour += 1
-                    
+
                 day['ext_temp'] = ext_temp
-            
+
             if count_days <= MAX_DAYS:
                 self._set_day_prop(day, count_days)
             if count_days <= MAX_DAILYS:
@@ -686,13 +686,13 @@ class Provider:
               and count_weekends <= MAX_WEEKENDS:
                 self._set_weekend_prop(day, count_weekends+1)
                 count_weekends += 1
-    
+
             count_days += 1
-    
+
     def _set_current_prop(self, forecast_info):
         current = forecast_info['current']
         weather_code = self._get_weather_code(current)
-    
+
         # Current
         # standard properties
         self._set_property('Current.Location'     , forecast_info['name'])
@@ -705,58 +705,58 @@ class Provider:
         self._set_property('Current.DewPoint'     , DEW_POINT(current['temperature']['air'], current['humidity'], False))
         self._set_property('Current.OutlookIcon'  , '%s.png' % weather_code) # xbmc translates it to Current.ConditionIcon
         self._set_property('Current.FanartCode'   , weather_code)
-    
+
         # extenden properties
         self._set_property('Current.Pressure'     , '%i mm Hg' % (current['pressure']))
         if current['precipitation']['amount'] is None:
             self._set_property('Current.Precipitation', '%s mm' % ('n/a'))
         else:
             self._set_property('Current.Precipitation', '%s mm' % (current['precipitation']['amount']))
-    
+
     def _set_forecast_prop(self, forecast_info):
         # Forecast
         # extended properties
-    
+
         self._set_property('Forecast.City'     , forecast_info['name'])
         self._set_property('Forecast.Country'  , forecast_info['country'])
         self._set_property('Forecast.State'    , forecast_info['district'])
         self._set_property('Forecast.Latitude' , forecast_info['lat'])
         self._set_property('Forecast.Longitude', forecast_info['lng'])
         self._set_property('Forecast.Updated'  , self._convert_date(forecast_info['cur_time']))
-    
+
     def _set_today_prop(self, forecast_info):
         current = forecast_info['current']
-    
+
         # Today
         # extended properties
-    
+
         if current['sunrise']['unix'] == current['sunset']['unix']:
             self._set_property('Today.Sunrise', '')
             self._set_property('Today.Sunset' , '')
         else:
             self._set_property('Today.Sunrise', self._get_time(current['sunrise']))
             self._set_property('Today.Sunset' , self._get_time(current['sunset']))
-    
+
     def _set_day_prop(self, day, count):
 
         weather_code = self._get_weather_code(day)
-    
+
         #Day [0-6]
         # standard properties
-        
+
         self._set_property('Day%i.Title'       % count, self._get_weekday(day['date'], 'l'))
         self._set_property('Day%i.HighTemp'    % count, str(day['temperature']['max']))
         self._set_property('Day%i.LowTemp'     % count, str(day['temperature']['min']))
         self._set_property('Day%i.Outlook'     % count, day['description'])
         self._set_property('Day%i.OutlookIcon' % count, '%s.png' % weather_code)
         self._set_property('Day%i.FanartCode'  % count, weather_code)
-    
+
     def _set_daily_prop(self, day, count):
         weather_code = self._get_weather_code(day)
-    
+
         # Daily [1-16]
         # extended properties
-        
+
         self._set_property('Daily.%i.LongDay'         % count, self._get_weekday(day['date'], 'l'))
         self._set_property('Daily.%i.ShortDay'        % count, self._get_weekday(day['date'], 's'))
         if self.DATE_FORMAT[1] == 'd' or self.DATE_FORMAT[0] == 'D':
@@ -783,14 +783,14 @@ class Provider:
             self._set_property('Daily.%i.Pressure'    % count, '%i mm Hg' % (day['pressure']['avg']))
         else:
             self._set_property('Daily.%i.Pressure'    % count, '%i mm Hg' % (day['pressure']['max']))
-        if day['precipitation']['amount'] is not None:
+        if day['precipitation']['amount'] is None:
             self._set_property('Daily.%i.Precipitation'   % count,  '%s mm' % ('n/a'))
         else:
             self._set_property('Daily.%i.Precipitation'   % count,  '%s mm' % (day['precipitation']['amount']))
-    
+
     def _set_hourly_prop(self, hour, count):
         weather_code = self._get_weather_code(hour)
-        
+
         #Hourly [1-34]
         self._set_property('Hourly.%i.Time'            % count, self._get_time(hour['date']))
         if self.DATE_FORMAT[1] == 'd' or self.DATE_FORMAT[0] == 'D':
@@ -809,7 +809,7 @@ class Provider:
         self._set_property('Hourly.%i.DewPoint'        % count, DEW_POINT(hour['temperature']['air'], hour['humidity']) + TEMPUNIT)
         self._set_property('Hourly.%i.FeelsLike'       % count, TEMP(hour['temperature']['comfort']) + TEMPUNIT)
         self._set_property('Hourly.%i.Pressure'        % count, '%i mm Hg' % (hour['pressure']))
-        if hour['precipitation']['amount'] is not None:
+        if hour['precipitation']['amount'] is None:
             self._set_property('Hourly.%i.Precipitation'   % count,  '%s mm' % ('n/a'))
         else:
             self._set_property('Hourly.%i.Precipitation'   % count,  '%s mm' % (hour['precipitation']['amount']))
@@ -837,7 +837,7 @@ class Provider:
         self._set_property('36Hour.%i.DewPoint'        % count, DEW_POINT(hour['temperature']['air'], hour['humidity']) + TEMPUNIT)
         self._set_property('36Hour.%i.FeelsLike'       % count, TEMP(hour['temperature']['comfort']) + TEMPUNIT)
         self._set_property('36Hour.%i.Pressure'        % count, '%i mm Hg' % (hour['pressure']))
-        if hour['precipitation']['amount'] is not None:
+        if hour['precipitation']['amount'] is None:
             self._set_property('36Hour.%i.Precipitation'   % count,  '%s mm' % ('n/a'))
         else:
             self._set_property('36Hour.%i.Precipitation'   % count,  '%s mm' % (hour['precipitation']['amount']))
@@ -848,13 +848,13 @@ class Provider:
         else:
             self._set_property('36Hour.%i.Heading'         % count, xbmc.getLocalizedString(33018+day_num))
             self._set_property('36Hour.%i.TemperatureHeading'  % count, xbmc.getLocalizedString(391))
-    
+
     def _set_weekend_prop(self, day, count):
         weather_code = self._get_weather_code(day)
 
         # weekenda [1-2]
         # extended properties
-        
+
         self._set_property('Weekend.%i.LongDay'         % count, self._get_weekday(day['date'], 'l'))
         self._set_property('Weekend.%i.ShortDay'        % count, self._get_weekday(day['date'], 's'))
         if self.DATE_FORMAT[1] == 'd' or self.DATE_FORMAT[0] == 'D':
