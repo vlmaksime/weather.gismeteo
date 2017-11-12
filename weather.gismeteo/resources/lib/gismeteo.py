@@ -6,11 +6,14 @@ import os
 import sys
 import urllib2
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import xml.etree.cElementTree as etree
 try:
-    etree.fromstring('<?xml version="1.0"?><foo><bar/></foo>')
+    test = etree.fromstring('<?xml version="1.0"?><foo><bar/></foo>')
+    for item in test.iter('foo'):
+        break
+    
 except TypeError:
     import xml.etree.ElementTree as etree
 
@@ -18,7 +21,10 @@ class Gismeteo:
 
     def __init__( self, params = {} ):
 
-        self.lang = params.get('lang', 'en')
+        self._lang = params.get('lang', 'en')
+        self._cache_dir = params.get('cache_dir', '')
+        self._cache_time = params.get('cache_time', 0)
+        
 
         base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
 
@@ -30,6 +36,9 @@ class Gismeteo:
 
     def _http_request( self, action, url_params={} ):
 
+        if self._request_is_cached(action, url_params):
+            return self._get_cached_request(action, url_params)
+        
         url = self._actions.get(action)
 
         for key, val in url_params.iteritems():
@@ -41,6 +50,10 @@ class Gismeteo:
             req.close()
         except:
             response = ''
+
+        if self._use_cache(action) \
+          and response != '':
+            self._set_cached_request(action, url_params, response)
 
         return response
 
@@ -90,6 +103,50 @@ class Gismeteo:
             result = None
 
         return result
+
+    def _get_cache_file(self, action, url_params):
+            file_name = action
+            for key, val in url_params.iteritems():
+                file_name = '%s_%s' % (file_name, val)
+
+            return os.path.join(self._cache_dir, file_name + '.xml')
+
+    def _request_is_cached(self, action, url_params):
+        result = False
+        
+        if self._cache_dir != '':
+            if not os.path.exists(self._cache_dir):
+                os.makedirs(self._cache_dir)
+
+            cache_file = self._get_cache_file(action, url_params)
+            if os.path.exists(cache_file) \
+               and os.path.isfile(cache_file):
+                    file_time = datetime.fromtimestamp(int(os.path.getctime(cache_file)))
+                    now_time = datetime.now()
+                    cache_delta = timedelta(seconds=self._cache_time)
+
+                    result = (file_time + cache_delta) >= now_time
+
+        return result
+
+    def _use_cache(self, action):
+        cached_actions = ['forecast']
+
+        return self._cache_dir != '' \
+               and action in cached_actions
+    
+    def _get_cached_request(self, action, url_params):
+        cache_file = self._get_cache_file(action, url_params)
+        xml_file = open(cache_file)
+        xml_info = xml_file.read()
+        xml_file.close()
+        return xml_info
+        
+    def _set_cached_request(self, action, url_params, xml_info):
+        cache_file = self._get_cache_file(action, url_params)
+        xml_file = open(cache_file, "w")
+        xml_file.write(xml_info)
+        xml_file.close()
 
     def _get_forecast_info(self, xml):
 
@@ -200,7 +257,7 @@ class Gismeteo:
     def cities_search(self, keyword):
 
         url_params = {'#keyword': keyword,
-                      '#lang': self.lang,
+                      '#lang': self._lang,
                       }
 
         response = self._http_request('cities_search', url_params)
@@ -210,7 +267,7 @@ class Gismeteo:
     def cities_ip(self):
         locations = []
 
-        url_params = {'#lang': self.lang,
+        url_params = {'#lang': self._lang,
                       }
 
         response = self._http_request('cities_ip', url_params)
@@ -221,7 +278,7 @@ class Gismeteo:
         url_params = {'#lat': lat,
                       '#lng': lng,
                       '#count': count,
-                      '#lang': self.lang,
+                      '#lang': self._lang,
                       }
 
         response = self._http_request('cities_ip', url_params)
@@ -230,7 +287,7 @@ class Gismeteo:
 
     def forecast(self, city_id):
         url_params = {'#city_id': city_id,
-                      '#lang': self.lang,
+                      '#lang': self._lang,
                       }
 
         response = self._http_request('forecast', url_params)
@@ -238,7 +295,14 @@ class Gismeteo:
         return self._get_forecast_info(response)
 
 if __name__ == '__main__':
-    gismeteo = Gismeteo()
+    cwd = os.path.dirname(os.path.abspath(__file__))
+    cache_dir = os.path.join(cwd, 'cache')
+
+    params = {'lang': 'en',
+              'cache_dir': cache_dir,
+              'cache_time': 60}
+
+    gismeteo = Gismeteo(params)
     locations = gismeteo.cities_ip()
     for location in locations:
         print('%s (%s, %s)' % (location['name'], location['district'], location['country']))
