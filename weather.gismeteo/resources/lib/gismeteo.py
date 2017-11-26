@@ -6,25 +6,86 @@ import os
 import sys
 import urllib2
 import time
-from datetime import datetime, timedelta
+import calendar
 
 import xml.etree.cElementTree as etree
 try:
     test = etree.fromstring('<?xml version="1.0"?><foo><bar/></foo>')
     for item in test.iter('foo'):
         break
-    
 except TypeError:
     import xml.etree.ElementTree as etree
 
-class Gismeteo:
-
-    def __init__( self, params = {} ):
-
-        self._lang = params.get('lang', 'en')
+class Cache:
+    def __init__(self, params = {}):
         self._cache_dir = params.get('cache_dir', '')
         self._cache_time = params.get('cache_time', 0)
+        self._time_delta = self._cache_time * 60
+    
+        self._clear_dir()
+
+    def _clear_dir(self):
+        now_time = time.time()
+
+        if self._cache_dir != '' \
+          and os.path.exists(self._cache_dir):
+            files = os.listdir(self._cache_dir)
+            for file_name in files:
+                file_path = self._get_file_path(file_name)
+                file_time = os.path.getmtime((file_path))
         
+                if (file_time + self._time_delta) <= now_time:
+                    os.remove(file_path)
+
+    def _get_file_path(self, file_name):
+        return os.path.join(self._cache_dir, file_name)
+                    
+    def is_cached(self, file_name):
+        result = False
+        
+        file_path = self._get_file_path(file_name)
+
+        if os.path.exists(file_path) \
+           and os.path.isfile(file_path):
+                file_time = os.path.getmtime((file_path))
+                now_time = time.time()
+
+                result = (file_time + self._time_delta) >= now_time
+
+        return result
+
+    def read_cache(self, file_name):
+        file_path = self._get_file_path(file_name)
+
+        if os.path.exists(file_path) \
+           and os.path.isfile(file_path):
+            file = open(file_path)
+            content = file.read()
+            file.close()
+        else:
+            content = None
+            
+        return content
+        
+    def save_cache(self, file_name, content):
+        if self._cache_dir != '':
+            if not os.path.exists(self._cache_dir):
+                os.makedirs(self._cache_dir)
+
+            file_path = self._get_file_path(file_name)
+
+            file = open(file_path, "w")
+            file.write(content)
+            file.close()
+                
+            
+class Gismeteo:
+
+    def __init__(self, params = {}):
+
+        self._lang = params.get('lang', 'en')
+        
+        self._cache = Cache(params) if params.get('cache_dir') is not None else None
 
         base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
 
@@ -36,8 +97,10 @@ class Gismeteo:
 
     def _http_request( self, action, url_params={} ):
 
-        if self._request_is_cached(action, url_params):
-            return self._get_cached_request(action, url_params)
+        if self._use_cache(action):
+            file_name = self._get_file_name(action, url_params)
+            if self._cache.is_cached(file_name):
+                return self._cache.read_cache(file_name)
         
         url = self._actions.get(action)
 
@@ -53,7 +116,7 @@ class Gismeteo:
 
         if self._use_cache(action) \
           and response != '':
-            self._set_cached_request(action, url_params, response)
+            self._cache.save_cache(file_name, response)
 
         return response
 
@@ -81,72 +144,42 @@ class Gismeteo:
     def _get_date(self, source, tzone):
 
         if isinstance(source, str):
-            full_date = source if len(source) > 10 else source + 'T00:00:00'
+            local_date = source if len(source) > 10 else source + 'T00:00:00'
+            local_stamp = 0
 
-            completed = False
-            while not completed:
+            while local_stamp == 0:
                 try:
-                    utc_sec = time.mktime(time.strptime(full_date, '%Y-%m-%dT%H:%M:%S'))
-                    completed = True
+                    local_stamp = calendar.timegm(time.strptime(local_date, '%Y-%m-%dT%H:%M:%S'))
                 except:
                     pass
 
-            result = {'local': full_date,
-                      'unix': utc_sec,
-                      'offset': tzone}
         elif isinstance(source, float):
-            utc_sec = source - tzone * 60
-            result = {'local': datetime.fromtimestamp(utc_sec).strftime('%Y-%m-%dT%H:%M:%S'),
-                      'unix': utc_sec,
-                      'offset': tzone}
+            local_stamp = source
+            local_date = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(local_stamp))
         else:
-            result = None
+            return None
 
+        utc_stamp = local_stamp - tzone * 60
+        result = {'local': local_date,
+                  'utc': time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(utc_stamp)), 
+                  'unix': utc_stamp,
+                  'offset': tzone}
         return result
 
-    def _get_cache_file(self, action, url_params):
+    def _get_file_name(self, action, url_params):
             file_name = action
             for key, val in url_params.iteritems():
                 file_name = '%s_%s' % (file_name, val)
 
-            return os.path.join(self._cache_dir, file_name + '.xml')
+            return file_name + '.xml'
 
-    def _request_is_cached(self, action, url_params):
-        result = False
-        
-        if self._cache_dir != '':
-            if not os.path.exists(self._cache_dir):
-                os.makedirs(self._cache_dir)
-
-            cache_file = self._get_cache_file(action, url_params)
-            if os.path.exists(cache_file) \
-               and os.path.isfile(cache_file):
-                    file_time = datetime.fromtimestamp(int(os.path.getctime(cache_file)))
-                    now_time = datetime.now()
-                    cache_delta = timedelta(seconds=self._cache_time)
-
-                    result = (file_time + cache_delta) >= now_time
-
-        return result
 
     def _use_cache(self, action):
         cached_actions = ['forecast']
 
-        return self._cache_dir != '' \
-               and action in cached_actions
+        return self._cache is not None \
+              and action in cached_actions
     
-    def _get_cached_request(self, action, url_params):
-        cache_file = self._get_cache_file(action, url_params)
-        xml_file = open(cache_file)
-        xml_info = xml_file.read()
-        xml_file.close()
-        return xml_info
-        
-    def _set_cached_request(self, action, url_params, xml_info):
-        cache_file = self._get_cache_file(action, url_params)
-        xml_file = open(cache_file, "w")
-        xml_file.write(xml_info)
-        xml_file.close()
 
     def _get_forecast_info(self, xml):
 
@@ -294,23 +327,20 @@ class Gismeteo:
 
         return self._get_forecast_info(response)
 
-if __name__ == '__main__':
-    cwd = os.path.dirname(os.path.abspath(__file__))
-    cache_dir = os.path.join(cwd, 'cache')
+def gismeteo_test():
 
-    params = {'lang': 'en',
-              'cache_dir': cache_dir,
-              'cache_time': 60}
-
-    gismeteo = Gismeteo(params)
+    gismeteo = Gismeteo()
     locations = gismeteo.cities_ip()
     for location in locations:
         print('%s (%s, %s)' % (location['name'], location['district'], location['country']))
         forecast = gismeteo.forecast(location['id'])
         current = forecast['current']
-        print('\tCurrent weather: temperature - %i°C, pressure - %imm, humidity - %i%%' % (current['temperature']['air'], current['pressure'], current['humidity']))
+        print('\tCurrent weather: temperature %i°C, pressure %imm, humidity %i%%' % (current['temperature']['air'], current['pressure'], current['humidity']))
         for day in forecast['days']:
-            print('\t%s: temperature - %i..%i°C, pressure - %imm, humidity - %i%%' % (day['date']['local'], day['temperature']['min'], day['temperature']['max'], day['pressure']['avg'], day['humidity']['avg']))
+            print('\t%s: temperature %i..%i°C, pressure %imm, humidity %i%%' % (day['date']['local'], day['temperature']['min'], day['temperature']['max'], day['pressure']['avg'], day['humidity']['avg']))
             if day.get('hourly') is not None:
                 for hour in day['hourly']:
-                    print('\t\t%s: temperature - %i°C, pressure - %imm, humidity - %i%%' % (hour['date']['local'], hour['temperature']['air'], hour['pressure'], hour['humidity']))
+                    print('\t\t%s: temperature %i°C, pressure %imm, humidity %i%%' % (hour['date']['local'], hour['temperature']['air'], hour['pressure'], hour['humidity']))
+                        
+if __name__ == '__main__':
+    gismeteo_test()
