@@ -21,7 +21,7 @@ class Cache:
         self._cache_dir = params.get('cache_dir', '')
         self._cache_time = params.get('cache_time', 0)
         self._time_delta = self._cache_time * 60
-    
+
         self._clear_dir()
 
     def _clear_dir(self):
@@ -33,16 +33,16 @@ class Cache:
             for file_name in files:
                 file_path = self._get_file_path(file_name)
                 file_time = os.path.getmtime((file_path))
-        
+
                 if (file_time + self._time_delta) <= now_time:
                     os.remove(file_path)
 
     def _get_file_path(self, file_name):
         return os.path.join(self._cache_dir, file_name)
-                    
+
     def is_cached(self, file_name):
         result = False
-        
+
         file_path = self._get_file_path(file_name)
 
         if os.path.exists(file_path) \
@@ -64,9 +64,9 @@ class Cache:
             file.close()
         else:
             content = None
-            
+
         return content
-        
+
     def save_cache(self, file_name, content):
         if self._cache_dir != '':
             if not os.path.exists(self._cache_dir):
@@ -77,14 +77,14 @@ class Cache:
             file = open(file_path, "w")
             file.write(content)
             file.close()
-                
-            
+
+
 class Gismeteo:
 
     def __init__(self, params = {}):
 
         self._lang = params.get('lang', 'en')
-        
+
         self._cache = Cache(params) if params.get('cache_dir') is not None else None
 
         base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
@@ -101,7 +101,7 @@ class Gismeteo:
             file_name = self._get_file_name(action, url_params)
             if self._cache.is_cached(file_name):
                 return self._cache.read_cache(file_name)
-        
+
         url = self._actions.get(action)
 
         for key, val in url_params.iteritems():
@@ -161,7 +161,7 @@ class Gismeteo:
 
         utc_stamp = local_stamp - tzone * 60
         result = {'local': local_date,
-                  'utc': time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(utc_stamp)), 
+                  'utc': time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(utc_stamp)),
                   'unix': utc_stamp,
                   'offset': tzone}
         return result
@@ -175,11 +175,11 @@ class Gismeteo:
 
 
     def _use_cache(self, action):
-        cached_actions = ['forecast']
+        cached_actions = ['forecast', 'cities_ip']
 
         return self._cache is not None \
               and action in cached_actions
-    
+
 
     def _get_forecast_info(self, xml):
 
@@ -193,6 +193,7 @@ class Gismeteo:
 
                 return {'name' : xml_location.attrib['name'],
                         'id': xml_location.attrib['id'],
+                        'kind': xml_location.attrib['kind'],
                         'country': xml_location.attrib['country_name'],
                         'district': xml_location.attrib.get('district_name', ''),
                         'lat': xml_location.attrib['lat'],
@@ -305,7 +306,10 @@ class Gismeteo:
 
         response = self._http_request('cities_ip', url_params)
 
-        return self._get_locations_list(response)
+        locations = self._get_locations_list(response)
+        for location in locations:
+            return location
+        return None
 
     def cities_nearby(self, lat, lng, count = 5):
         url_params = {'#lat': lat,
@@ -330,17 +334,16 @@ class Gismeteo:
 def gismeteo_test():
 
     gismeteo = Gismeteo()
-    locations = gismeteo.cities_ip()
-    for location in locations:
-        print('%s (%s, %s)' % (location['name'], location['district'], location['country']))
-        forecast = gismeteo.forecast(location['id'])
-        current = forecast['current']
-        print('\tCurrent weather: temperature %i°C, pressure %imm, humidity %i%%' % (current['temperature']['air'], current['pressure'], current['humidity']))
-        for day in forecast['days']:
-            print('\t%s: temperature %i..%i°C, pressure %imm, humidity %i%%' % (day['date']['local'], day['temperature']['min'], day['temperature']['max'], day['pressure']['avg'], day['humidity']['avg']))
-            if day.get('hourly') is not None:
-                for hour in day['hourly']:
-                    print('\t\t%s: temperature %i°C, pressure %imm, humidity %i%%' % (hour['date']['local'], hour['temperature']['air'], hour['pressure'], hour['humidity']))
-                        
+    location = gismeteo.cities_ip()
+    print('%s (%s, %s)' % (location['name'], location['district'], location['country']))
+    forecast = gismeteo.forecast(location['id'])
+    current = forecast['current']
+    print('\tCurrent weather: temperature %i°C, pressure %imm, humidity %i%%' % (current['temperature']['air'], current['pressure'], current['humidity']))
+    for day in forecast['days']:
+        print('\t%s: temperature %i..%i°C, pressure %imm, humidity %i%%' % (day['date']['local'], day['temperature']['min'], day['temperature']['max'], day['pressure']['avg'], day['humidity']['avg']))
+        if day.get('hourly') is not None:
+            for hour in day['hourly']:
+                print('\t\t%s: temperature %i°C, pressure %imm, humidity %i%%' % (hour['date']['local'], hour['temperature']['air'], hour['pressure'], hour['humidity']))
+
 if __name__ == '__main__':
     gismeteo_test()

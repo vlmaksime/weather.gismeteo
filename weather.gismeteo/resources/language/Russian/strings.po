@@ -22,6 +22,12 @@ msgctxt "#32103"
 msgid "Expert"
 msgstr "Экспертный"
 
+# Locations
+
+msgctxt "#32110"
+msgid "Current Location"
+msgstr "Текущее место"
+
 msgctxt "#32111"
 msgid "Location 1"
 msgstr "Место 1"
@@ -78,13 +84,25 @@ msgctxt "#32125"
 msgid "Thursday/Friday"
 msgstr "Четверг/пятница"
 
+msgctxt "#32130"
+msgid "Time zone"
+msgstr "Часовой пояс"
+
+msgctxt "#32131"
+msgid "from system settings"
+msgstr "из системных настроек"
+
+msgctxt "#32132"
+msgid "from location"
+msgstr "из места"
+
 msgctxt "#32200"
 msgid "User interface language"
 msgstr "Язык интерфейса"
 
 msgctxt "#32201"
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 msgctxt "#32202"
 msgid "Ukrainian"
@@ -92,32 +110,112 @@ msgstr ""
 
 msgctxt "#32203"
 msgid "Lithuanian"
-msgstr ""
+msgstr "Латышский"
 
 msgctxt "#32204"
 msgid "Latvian"
-msgstr ""
+msgstr "Литовский"
 
 msgctxt "#32205"
 msgid "English"
-msgstr ""
+msgstr "Английский"
 
 msgctxt "#32206"
 msgid "Romanian"
-msgstr ""
+msgstr "Румынский"
 
 msgctxt "#32207"
 msgid "German"
-msgstr ""
+msgstr "Немецкий"
 
 msgctxt "#32208"
 msgid "Polish"
-msgstr ""
+msgstr "Польский"
 
 msgctxt "#32299"
 msgid "Language"
 msgstr "Язык"
 
 msgctxt "#32301"
-msgid "Airport"
+msgid "a/p"
+msgstr "а/п"
+
+msgctxt "#32401"
+msgid "m/s"
+msgstr "м/с"
+
+msgctxt "#32402"
+msgid "km/h"
+msgstr "км/ч"
+
+msgctxt "#32403"
+msgid "m/min"
+msgstr "м/мин"
+
+msgctxt "#32404"
+msgid "ft/h"
+msgstr "фут/ч"
+
+msgctxt "#32405"
+msgid "ft/min"
+msgstr "фут/мин"
+
+msgctxt "#32406"
+msgid "ft/s"
+msgstr "фут/с"
+
+msgctxt "#32407"
+msgid "knots"
+msgstr "узлы"
+
+msgctxt "#32408"
+msgid "Beaufort"
 msgstr ""
+
+msgctxt "#32409"
+msgid "inch/s"
+msgstr "дюйм/с"
+
+msgctxt "#32410"
+msgid "yard/s"
+msgstr "ярд/с"
+
+msgctxt "#32411"
+msgid "Furlong/Fortnight"
+msgstr ""
+
+msgctxt "#32420"
+msgid "сalm"
+msgstr "штиль"
+
+#Precipitation
+
+msgctxt "#32430"
+msgid "mm"
+msgstr "мм"
+
+msgctxt "#32431"
+msgid "inсh"
+msgstr "дюймы"
+
+msgctxt "#32432"
+msgid "n/a"
+msgstr "н/д"
+
+#Pressure
+
+msgctxt "#32440"
+msgid "mmHg"
+msgstr "мм рт. ст."
+
+msgctxt "#32441"
+msgid "hPa"
+msgstr "гПа"
+
+msgctxt "#32442"
+msgid "mbar"
+msgstr "миллибары"
+
+msgctxt "#32443"
+msgid "inHg"
+msgstr "дюймы рт. ст."

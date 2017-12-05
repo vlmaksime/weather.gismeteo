@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="32101">
+        <setting id="CurrentLocation" label="32110" type="bool" default="true" />
         <setting id="Location1" label="32111" type="action" action="RunScript($ID,Location1)" default=""/>
         <setting id="Location2" label="32112" type="action" action="RunScript($ID,Location2)" enable="!eq(-1,)" default=""/>
         <setting id="Location3" label="32113" type="action" action="RunScript($ID,Location3)" enable="!eq(-1,)" default=""/>
@@ -15,6 +16,7 @@
     <category label="32102">
         <setting id="Language" label="32299" type="select" lvalues="32200|32201|32202|32203|32204|32205|32206|32207|32208" default="0"/>
 		<setting id="Weekend" label="32122" type="enum" lvalues="32123|32124|32125" default="0"/>
+		<setting id="TimeZone" label="32130" type="enum" lvalues="32131|32132" default="0"/>
     </category>
 	<category label="32103">
 		<setting id="Location1" label="32111" type="text" default=""/>
