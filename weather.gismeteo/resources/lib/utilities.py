@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import math
-from resources.lib.simpleplugin import Weather
+from simpleplugin import Weather
 
 weather = Weather()
 
 TEMPUNIT   = weather.tempunit
 SPEEDUNIT  = weather.speedunit
-PRESUNIT   = 'mmHg'
-PRECIPUNIT = 'mm'
+PRESUNIT   = ['mmHg','hPa', 'mbar', 'inHg'][weather.PresUnit]
+PRECIPUNIT = ['mm', 'inch'][weather.PrecipUnit]
 
          # kodi lang name          # gismeteo code
 LANG = { 'afrikaans'             : '',
@@ -349,9 +349,16 @@ def DEW_POINT(Tc=0, RH=93, ext=True, minRH=( 0, 0.075 )[ 0 ]):
     else:
         return str(int(round(DewPoint)))
 
-
-def PRESSURE(mm):
-    return mm
+def PRESSURE(mmHg):
+    if PRESUNIT == 'mmHg':
+        return '%.0f' % (float(mmHg))
+    elif PRESUNIT in ['hPa', 'mbar']:
+        return '%.0f' % (float(mmHg * 1.3332239))
+    elif PRESUNIT == 'inHg':
+        return '%.2f' % (float(mmHg * 0.0393701))
 
 def PRECIPITATION(mm):
-    return float(mm)
+    if PRECIPUNIT == 'mm':
+        return '%.1f' % (float(mm))
+    elif PRECIPUNIT == 'inch':
+        return '%.2f' % (float(mm) * 0.0393701)

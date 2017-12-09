@@ -1544,7 +1544,9 @@ class Weather(Addon):
         """
         super(Weather, self).__init__(id_)
         self._url = 'plugin://{0}/'.format(self.id)
-        self._handle = None
+        self.actions = {}
+        self._params = None
+
         self._window = xbmcgui.Window(12600)
         
         self._reg_tempunit = unicode(xbmc.getRegion('tempunit'),encoding='utf-8')
@@ -1557,6 +1559,105 @@ class Weather(Addon):
 
     def __repr__(self):
         return '<simpleplugin.Weather object {0}>'.format(sys.argv)
+
+    @property
+    def params(self):
+        """
+        Get plugin call parameters
+
+        :return: plugin call parameters
+        :rtype: Params
+        """
+        return self._params
+
+    @staticmethod
+    def get_params(paramstring):
+        """
+        Convert a URL-encoded paramstring to a Python dict
+
+        :param paramstring: URL-encoded paramstring
+        :type paramstring: str
+        :return: parsed paramstring
+        :rtype: Params
+        """
+        raw_params = parse_qs(paramstring)
+        params = Params()
+        for key, value in raw_params.iteritems():
+            params[key] = value[0] if len(value) == 1 else value
+        return params
+
+
+    def action(self, name=None):
+        """
+        Action decorator
+
+        Defines plugin callback action. If action's name is not defined explicitly,
+        then the action is named after the decorated function.
+
+        .. warning:: Action's name must be unique.
+
+        A plugin must have at least one action named ``'root'`` implicitly or explicitly.
+
+        Example:
+
+        .. code-block:: python
+
+            @plugin.action()  # The action is implicitly named 'root' after the decorated function
+            def root(params):
+                pass
+
+            @plugin.action('foo')  # The action name is set explicitly
+            def foo_action(params):
+                pass
+
+        :param name: action's name (optional).
+        :type name: str
+        :raises SimplePluginError: if the action with such name is already defined.
+        """
+        def wrap(func, name=name):
+            if name is None:
+                name = func.__name__
+            if name in self.actions:
+                raise SimplePluginError('Action "{0}" already defined!'.format(name))
+            self.actions[name] = func
+            return func
+        return wrap
+
+    def run(self, category=None):
+        """
+        Run plugin
+
+        :raises SimplePluginError: if unknown action string is provided.
+        """
+        
+        if sys.argv[1].isdigit():
+            paramstring = 'id=%s' % (sys.argv[1])
+        else:
+            paramstring = sys.argv[1]
+
+        self._params = self.get_params(paramstring)
+        self.log_debug(str(self))
+        self._resolve_function()
+
+    def _resolve_function(self):
+        """
+        Resolve action from plugin call params and call the respective callable function
+
+        :return: action callable's return value
+        """
+        self.log_debug('Actions: {0}'.format(str(self.actions.keys())))
+        action = self._params.get('action', 'forecast')
+        self.log_debug('Called action "{0}" with params "{1}"'.format(action, str(self._params)))
+        try:
+            action_callable = self.actions[action]
+        except KeyError:
+            raise SimplePluginError('Invalid action: "{0}"!'.format(action))
+        else:
+            # inspect.isfunction is needed for tests
+            if inspect.isfunction(action_callable) and not inspect.getargspec(action_callable).args:
+                return action_callable()
+            else:
+                return action_callable(self._params)
 
     def set_property(self, name, value):
         """
@@ -1586,6 +1687,8 @@ class Weather(Addon):
         :type category: str
         :name count: category count (optional)
         :type count: int
+        :name sep: separator between category and count
+        :type sep: str
 
         """
         category_name = category if count is None else '%s%s%i' % (category, sep, count)

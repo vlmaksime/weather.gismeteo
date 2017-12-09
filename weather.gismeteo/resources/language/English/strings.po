@@ -100,6 +100,22 @@ msgctxt "#32132"
 msgid "from location"
 msgstr ""
 
+msgctxt "#32133"
+msgid "Measure units"
+msgstr ""
+
+msgctxt "#32134"
+msgid "Pressure"
+msgstr ""
+
+msgctxt "#32135"
+msgid "Precipitation"
+msgstr ""
+
+msgctxt "#32136"
+msgid "Clear cache"
+msgstr ""
+
 msgctxt "#32200"
 msgid "User interface language"
 msgstr ""
@@ -203,7 +219,7 @@ msgid "mm"
 msgstr ""
 
 msgctxt "#32431"
-msgid "inсh"
+msgid "inch"
 msgstr ""
 
 msgctxt "#32432"
@@ -227,4 +243,3 @@ msgstr ""
 msgctxt "#32443"
 msgid "inHg"
 msgstr ""
-

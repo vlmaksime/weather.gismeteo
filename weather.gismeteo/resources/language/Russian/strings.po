@@ -10,6 +10,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
 
+# Categories
+
 msgctxt "#32101"
 msgid "Location setup"
 msgstr "Места"
@@ -22,7 +24,7 @@ msgctxt "#32103"
 msgid "Expert"
 msgstr "Экспертный"
 
-# Locations
+# Location setup
 
 msgctxt "#32110"
 msgid "Current Location"
@@ -68,6 +70,8 @@ msgctxt "#32120"
 msgid "Location 5 ID"
 msgstr "Место 5, ID"
 
+# Advanced
+
 msgctxt "#32122"
 msgid "Weekend"
 msgstr "Выходные"
@@ -95,6 +99,22 @@ msgstr "из системных настроек"
 msgctxt "#32132"
 msgid "from location"
 msgstr "из места"
+
+msgctxt "#32133"
+msgid "Measure units"
+msgstr "Единицы измерения"
+
+msgctxt "#32134"
+msgid "Pressure"
+msgstr "Давление"
+
+msgctxt "#32135"
+msgid "Precipitation"
+msgstr "Осадки"
+
+msgctxt "#32136"
+msgid "Clear cache"
+msgstr "Очистить кэш"
 
 msgctxt "#32200"
 msgid "User interface language"
@@ -140,6 +160,8 @@ msgctxt "#32301"
 msgid "a/p"
 msgstr "а/п"
 
+#Speed
+
 msgctxt "#32401"
 msgid "m/s"
 msgstr "м/с"
@@ -184,6 +206,8 @@ msgctxt "#32411"
 msgid "Furlong/Fortnight"
 msgstr ""
 
+#Wind direction
+
 msgctxt "#32420"
 msgid "сalm"
 msgstr "штиль"
@@ -195,7 +219,7 @@ msgid "mm"
 msgstr "мм"
 
 msgctxt "#32431"
-msgid "inсh"
+msgid "inch"
 msgstr "дюймы"
 
 msgctxt "#32432"
