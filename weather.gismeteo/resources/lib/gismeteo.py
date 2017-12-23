@@ -10,9 +10,7 @@ import calendar
 
 import xml.etree.cElementTree as etree
 try:
-    test = etree.fromstring('<?xml version="1.0"?><foo><bar/></foo>')
-    for item in test.iter('foo'):
-        break
+    etree.fromstring('<?xml version="1.0"?><foo><bar/></foo>')
 except TypeError:
     import xml.etree.ElementTree as etree
 
@@ -128,7 +126,7 @@ class Gismeteo:
             root = None
 
         if root is not None:
-            for item in root.iter('item'):
+            for item in root:
 
                 location = {'name' : item.attrib['n'],
                             'id': item.attrib['id'],
