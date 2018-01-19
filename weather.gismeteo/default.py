@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# Module: default
+# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
+
 import os
 import time
 
@@ -26,7 +29,7 @@ KODILANGUAGE   = xbmc.getLanguage().lower()
 
 CURRENT_TIME = {'unix': time.time()}
 
-CACHE_DIR = os.path.join(xbmc.translatePath('special://temp'), weather.id)
+CACHE_DIR = os.path.join(weather.config_dir, 'cache')
 
 class MyMonitor(xbmc.Monitor):
     def __init__(self, *args, **kwargs):
@@ -143,48 +146,9 @@ def get_wind_direction(value):
     else:
         return _('n/a')
 
-def get_weather_icon(item, tod='d'):
-    storm = item.get('storm', False)
-
-    ph = item.get('ph')
-    mist = (ph == 5 or (ph >= 10 and ph <= 12) \
-            or ph == 28 or (ph >= 40 and ph <= 49) \
-            or (ph >= 104 and ph <= 105) or ph == 110 \
-            or ph == 120 or (ph >= 130 and ph <= 135))
-
-    cl = item['cloudiness']
-    pt = item['precipitation']['type']
-    pr = item['precipitation']['intensity']
-
-    icon_params = []
-
-    if not (cl == '3' or mist):
-        icon_params.append(tod)
-
-    if cl != '0' and not mist:
-        icon_params.append('c%d' % (int(cl) + 1 if cl != '101' else 2))
-
-    if pr != '0' and pt != '0':
-        icon_params.append('%s%s' % ('r' if pt == '1' else 's' if pt == '2' else 'rs', pr))
-
-    if storm:
-        icon_params.append('st')
-
-    if mist:
-        icon_params.append('mist')
-
-    icon = '.'.join(icon_params)
-
-    if icon == '':
-        icon = 'nodata'
-
-    return icon
-
 def get_weather_code(item):
 
-    #icon = get_weather_icon(item, tod)
     weather_code = WEATHER_CODES.get(item['icon'], 'na')
-    #weather_code = item['icon']
     return weather_code
 
 def get_struct(type):
@@ -198,25 +162,13 @@ def get_struct(type):
                   'WindDirection': '',
                   'Humidity':      '',
                   'FeelsLike':     '',
-    #              'UVIndex':       '',
                   'DewPoint':      '',
                   'OutlookIcon':   '',
                   'FanartCode':    '',
 
                    # extenden properties
-    #              'LowTemperature':  '',
-    #              'HighTemperature': '',
                   'Pressure':        '',
-    #              'SeaLevel':        '',
-    #              'GroundLevel':     '',
-    #              'WindGust':        '',
-    #              'WindDirStart':    '',
-    #              'WindDirEnd':      '',
-    #              'Rain':            '',
-    #              'Snow':            '',
                   'Precipitation':   '',
-    #              'Cloudiness':      '',
-    #              'ShortOutlook':    '',
                   }
 
     elif type == 'today':
@@ -243,17 +195,11 @@ def get_struct(type):
                   'LongDate':           '',
                   'ShortDate':          '',
                   'Outlook':            '',
-    #              'ShortOutlook':       '',
                   'OutlookIcon':        '',
-    #              'LongOutlookDay':     '',
-    #              'LongOutlookNight':   '',
                   'FanartCode':         '',
                   'WindSpeed':          '',
                   'MaxWind':            '',
                   'WindDirection':      '',
-    #              'ShortWindDirection': '',
-    #              'WindDegree':         '',
-    #              'WindGust':           '',
                   'Humidity':           '',
                   'MinHumidity':        '',
                   'MaxHumidity':        '',
@@ -264,11 +210,7 @@ def get_struct(type):
                   'TempDay':            '',
                   'TempEve':            '',
                   'TempNight':          '',
-    #              'FeelsLike':          '',
                   'Pressure':           '',
-    #              'Cloudiness':         '',
-    #              'Rain':               '',
-    #              'Snow':               '',
                   'Precipitation':      '',
                   }
 
@@ -278,25 +220,15 @@ def get_struct(type):
                   'LongDate':         '',
                   'ShortDate':        '',
                   'Outlook':          '',
-    #              'ShortOutlook':     '',
                   'OutlookIcon':      '',
                   'FanartCode':       '',
                   'WindSpeed':        '',
                   'WindDirection':    '',
-    #              'WindDegree':       '',
-     #             'WindGust':         '',
                   'Humidity':         '',
                   'Temperature':      '',
-    #              'HighTemperature':  '',
-    #              'LowTemperature':   '',
                   'DewPoint':         '',
                   'FeelsLike':        '',
                   'Pressure':         '',
-    #              'SeaLevel':         '',
-    #              'GroundLevel':      '',
-    #              'Cloudiness':       '',
-    #              'Rain':             '',
-    #              'Snow':             '',
                   'Precipitation':    '',
                   }
 
@@ -309,23 +241,15 @@ def get_struct(type):
                   'LongDate':           '',
                   'ShortDate':          '',
                   'Outlook':            '',
-    #              'ShortOutlook':       '',
                   'OutlookIcon':        '',
                   'FanartCode':         '',
                   'WindSpeed':          '',
                   'WindDirection':      '',
-    #              'WindDegree':         '',
-    #              'WindGust':           '',
                   'Humidity':           '',
                   'Temperature':        '',
-    #              'HighTemperature':    '',
-    #              'LowTemperature':     '',
                   'DewPoint':           '',
                   'FeelsLike':          '',
                   'Pressure':           '',
-    #              'Cloudiness':         '',
-    #              'Rain':               '',
-    #              'Snow':               '',
                   'Precipitation':      '',
                   }
     else:
