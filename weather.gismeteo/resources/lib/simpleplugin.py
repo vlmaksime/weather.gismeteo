@@ -1240,7 +1240,7 @@ class Plugin(Addon):
                 else:
                     raise TypeError(
                         'method parameter must be of int or dict type!')
-                    
+
         xbmcplugin.endOfDirectory(self._handle,
                                   context.succeeded,
                                   context.update_listing,
@@ -1548,7 +1548,7 @@ class Weather(Addon):
         self._params = None
 
         self._window = xbmcgui.Window(12600)
-        
+
         self._reg_tempunit = unicode(xbmc.getRegion('tempunit'),encoding='utf-8')
         self._reg_speedunit = xbmc.getRegion('speedunit')
         self._reg_dateshort = xbmc.getRegion('dateshort')
@@ -1629,7 +1629,7 @@ class Weather(Addon):
 
         :raises SimplePluginError: if unknown action string is provided.
         """
-        
+
         if sys.argv[1].isdigit():
             paramstring = 'id=%s' % (sys.argv[1])
         else:
@@ -1676,7 +1676,7 @@ class Weather(Addon):
         else:
             raise TypeError(
                 'value parameter must be of int, str, or unicode type!')
-        
+
     def set_properties(self, properties, category, count=None, sep='.'):
         """
         Set properties of weather window

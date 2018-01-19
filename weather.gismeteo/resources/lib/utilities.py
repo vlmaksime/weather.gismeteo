@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Module: utilities
+# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import math
 from simpleplugin import Weather
@@ -271,7 +273,7 @@ def SPEED(mps):
         speed = mps * 3.281
     elif SPEEDUNIT == 'mph':
         speed = mps * 2.237
-    elif SPEEDUNIT == 'knots':
+    elif SPEEDUNIT in ['knots', 'kts']:
         speed = mps * 1.944
     elif SPEEDUNIT == 'Beaufort':
         speed = KPHTOBFT(mps* 3.6)
@@ -283,22 +285,26 @@ def SPEED(mps):
         speed = mps * 6012.886
     else:
         speed = mps
-    return str(int(round(speed)))
+
+    if isinstance(speed, str):
+        return speed
+    else:
+        return str(int(round(speed)))
 
 def TEMP(deg):
-    if TEMPUNIT == u'В°F':
+    if TEMPUNIT == u'°F':
         temp = deg * 1.8 + 32
     elif TEMPUNIT == u'K':
         temp = deg + 273.15
-    elif TEMPUNIT == u'В°RГ©':
+    elif TEMPUNIT == u'°Ré':
         temp = deg * 0.8
-    elif TEMPUNIT == u'В°Ra':
+    elif TEMPUNIT == u'°Ra':
         temp = deg * 1.8 + 491.67
-    elif TEMPUNIT == u'В°RГё':
+    elif TEMPUNIT == u'°Rø':
         temp = deg * 0.525 + 7.5
-    elif TEMPUNIT == u'В°D':
+    elif TEMPUNIT == u'°D':
         temp = deg / -0.667 + 150
-    elif TEMPUNIT == u'В°N':
+    elif TEMPUNIT == u'°N':
         temp = deg * 0.33
     else:
         temp = deg

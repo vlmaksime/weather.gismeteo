@@ -1,4 +1,4 @@
-﻿# Kodi Media Center language file
+# Kodi Media Center language file
 # Addon Name: Gismeteo
 # Addon id: weather.gismeteo
 # Addon Provider: vl.maksime
@@ -22,7 +22,7 @@ msgstr ""
 
 msgctxt "#32103"
 msgid "Expert"
-msgst
+msgstr ""
 
 # Location setup
 
@@ -204,6 +204,14 @@ msgstr ""
 
 msgctxt "#32411"
 msgid "Furlong/Fortnight"
+msgstr ""
+
+msgctxt "#32412"
+msgid "mph"
+msgstr ""
+
+msgctxt "#32413"
+msgid "kts"
 msgstr ""
 
 #Wind direction

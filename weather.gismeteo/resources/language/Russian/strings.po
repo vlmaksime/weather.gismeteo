@@ -206,6 +206,14 @@ msgctxt "#32411"
 msgid "Furlong/Fortnight"
 msgstr ""
 
+msgctxt "#32412"
+msgid "mph"
+msgstr "миль/ч"
+
+msgctxt "#32413"
+msgid "kts"
+msgstr "узлы"
+
 #Wind direction
 
 msgctxt "#32420"

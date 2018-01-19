@@ -1,25 +1,25 @@
 v0.2.3 (2017-12-23)
-- Исправлена ошибка совместимости с KODI 16.1 на Android 4.4 
+- Fixed compatibility with KODI 16.1 on Android 4.4
 
 v0.2.2 (2017-12-10)
-- Исправлены выявленные ошибки
-- Добавлен выбор единиц измерения для давления и осадков
-- Добавлена возможность очистить кэш (Настройки-Экспертный-Очистить кэш)
+- Fixed bugs
+- Added selection of units for pressure and precipitation
+- Added the ability to clear the cache (Settings-Expert-Clear cache)
 
 v0.2.1 (2017-12-04)
-- Реализовано кэширование запросов к сервису
-- Добавлена возможность отображения текущего места
-- Добавлен перевод единиц измерения
-- Добавлен выбор часового пояса для отображения даты и времени
+- Cached requests to the service
+- Added the ability to display the current location
+- Added translation for units of measure
+- Added time zone selection to display date and time
 
 v0.1.2 (2017-11-06)
-- Исправил отображение осадков
+- Corrected the display of precipitation
 
 v0.1.1 (2017-11-05)
-- Добавлена совместимость со старыми версиями KODI
-- Добавлен вывод погоды на выходные
-- Добавлен вывод погоды на 36 часов
-- Добавлен выбор языка для получения прогноза
+- Compatibility with older versions of KODI is added
+- Added weather output for the weekend
+- Added weather output for 36 hours
+- Added language selection for forecasting
 
 v0.1.0 (2017-10-23)
-- Публичный релиз
+- Public release
