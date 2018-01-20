@@ -31,7 +31,7 @@ class GismeteoTestCase(unittest.TestCase):
         print('\n#cities_ip')
 
         location = gismeteo.cities_ip()
-        
+
         if location is None:
             print('Current location not detected')
             self.assertIsNone(location)
@@ -52,7 +52,7 @@ class GismeteoTestCase(unittest.TestCase):
             count += 1
 
         self.assertTrue(count > 0)
-        
+
     def test_cities_search(self):
         print('\n#cities_search')
 
@@ -65,14 +65,14 @@ class GismeteoTestCase(unittest.TestCase):
             count += 1
 
         self.assertTrue(count > 0)
-        
+
     def test_forecast(self):
         print('\n#forecast')
 
         has_forecast = False
         has_days = False
         has_hourly = False
- 
+
         forecast = gismeteo.forecast('5080')
 
         if forecast is not None:
@@ -94,6 +94,6 @@ class GismeteoTestCase(unittest.TestCase):
         self.assertTrue(has_forecast)
         self.assertTrue(has_days)
         self.assertTrue(has_hourly)
-        
+
 if __name__ == '__main__':
     unittest.main()
