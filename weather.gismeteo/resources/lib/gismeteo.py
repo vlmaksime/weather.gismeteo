@@ -316,7 +316,7 @@ class Gismeteo:
                       '#lang': self._lang,
                       }
 
-        response = self._http_request('cities_ip', url_params)
+        response = self._http_request('cities_nearby', url_params)
 
         return self._get_locations_list(response)
 

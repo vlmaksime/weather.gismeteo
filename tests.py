@@ -15,10 +15,6 @@ plugin_name = 'weather.gismeteo'
 sys.path.append(os.path.join(cwd, plugin_name))
 from resources.lib.gismeteo import Gismeteo
 
-# Begin tests
-params = {'cache_dir': cache_dir}
-gismeteo = Gismeteo(params)
-
 def tearDownModule():
     shutil.rmtree(cache_dir, True)
 
@@ -27,24 +23,28 @@ class GismeteoTestCase(unittest.TestCase):
     Test Gismeteo class
     """
 
+    def setUp(self):
+        params = {'cache_dir': cache_dir}
+        self.gismeteo = Gismeteo(params)
+
     def test_cities_ip(self):
         print('\n#cities_ip')
 
-        location = gismeteo.cities_ip()
+        location = self.gismeteo.cities_ip()
 
         if location is None:
             print('Current location not detected')
             self.assertIsNone(location)
         else:
             print('Current location is %s: %s (%s)' % (location['country'], location['name'], location['district']))
-            self.assertTrue(location['name'])
+            self.assertNotEqual(location['name'], '')
 
     def test_cities_nearby(self):
         print('\n#cities_nearby')
 
         count = 0
 
-        locations = gismeteo.cities_nearby('48.02', '37.8')
+        locations = self.gismeteo.cities_nearby('48.02', '37.8')
 
         print('Search results:')
         for location in locations:
@@ -57,7 +57,7 @@ class GismeteoTestCase(unittest.TestCase):
         print('\n#cities_search')
 
         count = 0
-        locations = gismeteo.cities_search('Donetsk')
+        locations = self.gismeteo.cities_search('Donetsk')
 
         print('Search results:')
         for location in locations:
@@ -73,7 +73,7 @@ class GismeteoTestCase(unittest.TestCase):
         has_days = False
         has_hourly = False
 
-        forecast = gismeteo.forecast('5080')
+        forecast = self.gismeteo.forecast('5080')
 
         if forecast is not None:
             print('%s: %s (%s)' % (forecast['country'], forecast['name'], forecast['district']))
