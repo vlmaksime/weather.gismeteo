@@ -103,7 +103,7 @@ class Gismeteo:
         url = self._actions.get(action)
 
         for key, val in url_params.iteritems():
-            url = url.replace(key, val)
+            url = url.replace(key, str(val))
 
         try:
             req = urllib2.urlopen(url)
@@ -328,20 +328,3 @@ class Gismeteo:
         response = self._http_request('forecast', url_params)
 
         return self._get_forecast_info(response)
-
-def gismeteo_test():
-
-    gismeteo = Gismeteo()
-    location = gismeteo.cities_ip()
-    print('%s (%s, %s)' % (location['name'], location['district'], location['country']))
-    forecast = gismeteo.forecast(location['id'])
-    current = forecast['current']
-    print('\tCurrent weather: temperature %i°C, pressure %imm, humidity %i%%' % (current['temperature']['air'], current['pressure'], current['humidity']))
-    for day in forecast['days']:
-        print('\t%s: temperature %i..%i°C, pressure %imm, humidity %i%%' % (day['date']['local'], day['temperature']['min'], day['temperature']['max'], day['pressure']['avg'], day['humidity']['avg']))
-        if day.get('hourly') is not None:
-            for hour in day['hourly']:
-                print('\t\t%s: temperature %i°C, pressure %imm, humidity %i%%' % (hour['date']['local'], hour['temperature']['air'], hour['pressure'], hour['humidity']))
-
-if __name__ == '__main__':
-    gismeteo_test()
