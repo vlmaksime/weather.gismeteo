@@ -11,6 +11,8 @@ import xbmcgui
 from resources.lib.gismeteo import Gismeteo
 from resources.lib.utilities import *
 
+weather = Weather()
+
 _ = weather.initialize_gettext()
 
 MAX_DAYS      = 7
@@ -62,11 +64,11 @@ def is_weekend(day):
     return (get_weekday(day['date'], 'x') in WEEKENDS)
 
 def get_weekends():
-    weekend = weather.Weekend
+    weekend = weather.get_setting('Weekend')
 
-    if weekend == '2':
+    if weekend == 2:
         weekends = [4,5]
-    elif weekend == '1':
+    elif weekend == 1:
         weekends = [5,6]
     else:
         weekends = [6,0]

@@ -4,9 +4,16 @@
 
 import os
 import sys
-import urllib2
 import time
 import calendar
+try:
+    # For Python 2.x
+    from urllib2 import urlopen
+except ImportError:
+    # For Python 3.x
+    from urllib.request import urlopen
+    
+
 
 import xml.etree.cElementTree as etree
 try:
@@ -106,7 +113,7 @@ class Gismeteo:
             url = url.replace(key, str(val))
 
         try:
-            req = urllib2.urlopen(url)
+            req = urlopen(url)
             response = req.read()
             req.close()
         except:
