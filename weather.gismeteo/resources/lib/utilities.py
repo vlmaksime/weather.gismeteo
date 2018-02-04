@@ -2,15 +2,16 @@
 # Module: utilities
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
+from __future__ import absolute_import
 import math
-from simpleplugin import Weather
+from .simpleweather import Weather
 
 weather = Weather()
 
 TEMPUNIT   = weather.tempunit
 SPEEDUNIT  = weather.speedunit
-PRESUNIT   = ['mmHg','hPa', 'mbar', 'inHg'][weather.PresUnit]
-PRECIPUNIT = ['mm', 'inch'][weather.PrecipUnit]
+PRESUNIT   = ['mmHg','hPa', 'mbar', 'inHg'][weather.get_setting("PresUnit")]
+PRECIPUNIT = ['mm', 'inch'][weather.get_setting("PrecipUnit")]
 
          # kodi lang name          # gismeteo code
 LANG = { 'afrikaans'             : '',

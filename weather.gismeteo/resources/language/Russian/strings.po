@@ -114,7 +114,7 @@ msgstr "Осадки"
 
 msgctxt "#32136"
 msgid "Clear cache"
-msgstr "Очистить кэш"
+msgstr "Очистить кеш"
 
 msgctxt "#32200"
 msgid "User interface language"
@@ -126,7 +126,7 @@ msgstr "Русский"
 
 msgctxt "#32202"
 msgid "Ukrainian"
-msgstr ""
+msgstr "Украинский"
 
 msgctxt "#32203"
 msgid "Lithuanian"
@@ -217,7 +217,7 @@ msgstr "узлы"
 #Wind direction
 
 msgctxt "#32420"
-msgid "сalm"
+msgid "calm"
 msgstr "штиль"
 
 #Precipitation

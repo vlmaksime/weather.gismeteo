@@ -2,18 +2,18 @@
 # Module: gismeteo
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
+from future.utils import (PY3, iteritems)
+
 import os
 import sys
 import time
 import calendar
-try:
-    # For Python 2.x
-    from urllib2 import urlopen
-except ImportError:
-    # For Python 3.x
-    from urllib.request import urlopen
+if PY3:
+    from urllib.request import (urlopen, quote)
+    from io import open
+else:
+    from urllib import (urlopen, quote)
     
-
 
 import xml.etree.cElementTree as etree
 try:
@@ -21,7 +21,7 @@ try:
 except TypeError:
     import xml.etree.ElementTree as etree
 
-class Cache:
+class Cache(object):
     def __init__(self, params = {}):
         self._cache_dir = params.get('cache_dir', '')
         self._cache_time = params.get('cache_time', 0)
@@ -73,18 +73,20 @@ class Cache:
         return content
 
     def save_cache(self, file_name, content):
-        if self._cache_dir != '':
+        if self._cache_dir:
             if not os.path.exists(self._cache_dir):
                 os.makedirs(self._cache_dir)
 
             file_path = self._get_file_path(file_name)
 
             file = open(file_path, "w")
-            file.write(content)
+            if PY3:
+                file.write(content.decode('utf-8'))
+            else:
+                file.write(content)
             file.close()
 
-
-class Gismeteo:
+class Gismeteo(object):
 
     def __init__(self, params = {}):
 
@@ -109,28 +111,22 @@ class Gismeteo:
 
         url = self._actions.get(action)
 
-        for key, val in url_params.iteritems():
+        for key, val in iteritems(url_params):
             url = url.replace(key, str(val))
 
-        try:
-            req = urlopen(url)
-            response = req.read()
-            req.close()
-        except:
-            response = ''
+        req = urlopen(url)
+        response = req.read()
+        req.close()
 
         if self._use_cache(action) \
-          and response != '':
+          and response:
             self._cache.save_cache(file_name, response)
 
         return response
 
     def _get_locations_list( self, xml ):
 
-        try:
-            root = etree.fromstring(xml)
-        except:
-            root = None
+        root = etree.fromstring(xml)
 
         if root is not None:
             for item in root:
@@ -148,7 +144,10 @@ class Gismeteo:
 
     def _get_date(self, source, tzone):
 
-        if isinstance(source, str):
+        if isinstance(source, float):
+            local_stamp = source
+            local_date = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(local_stamp))
+        else:
             local_date = source if len(source) > 10 else source + 'T00:00:00'
             local_stamp = 0
 
@@ -157,12 +156,6 @@ class Gismeteo:
                     local_stamp = calendar.timegm(time.strptime(local_date, '%Y-%m-%dT%H:%M:%S'))
                 except:
                     pass
-
-        elif isinstance(source, float):
-            local_stamp = source
-            local_date = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(local_stamp))
-        else:
-            return None
 
         utc_stamp = local_stamp - tzone * 60
         result = {'local': local_date,
@@ -173,7 +166,7 @@ class Gismeteo:
 
     def _get_file_name(self, action, url_params):
             file_name = action
-            for key, val in url_params.iteritems():
+            for key, val in iteritems(url_params):
                 file_name = '%s_%s' % (file_name, val)
 
             return file_name + '.xml'
@@ -188,10 +181,7 @@ class Gismeteo:
 
     def _get_forecast_info(self, xml):
 
-        try:
-            root = etree.fromstring(xml)
-        except:
-            root = None
+        root = etree.fromstring(xml)
 
         if root is not None:
                 xml_location = root[0]
@@ -295,7 +285,7 @@ class Gismeteo:
 
     def cities_search(self, keyword):
 
-        url_params = {'#keyword': keyword,
+        url_params = {'#keyword': quote(keyword),
                       '#lang': self._lang,
                       }
 

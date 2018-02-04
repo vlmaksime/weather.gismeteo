@@ -1,6 +1,10 @@
 # coding: utf-8
 # Module: tests
 
+from __future__ import print_function, unicode_literals
+from future.utils import (PY26, PY27, python_2_unicode_compatible)
+from builtins import range
+from io import open
 import os
 import sys
 import random
@@ -9,21 +13,28 @@ import imp
 from collections import defaultdict
 import mock
 import shutil
+import re
 
 plugin_name = 'weather.gismeteo'
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 config_dir = os.path.join(cwd, 'config')
 cache_dir = os.path.join(config_dir, 'cache')
-plugin_dir = os.path.join(cwd, plugin_name)
+addon_dir = os.path.join(cwd, plugin_name)
 
-tempunit_list = ['°F', 'K', '°C', '°Ré', '°Ra', '°Rø', '°De', '°N']
+default_script = os.path.join(addon_dir,'default.py')
+
+tempunit_list = [u'°F', u'K', u'°C', u'°Ré', u'°Ra', u'°Rø', u'°De', u'°N']
 speedunit_list = ['km/h', 'm/min', 'm/s', 'ft/h', 'ft/min', 'ft/s', 'mph', 'kts', 'Beaufort', 'inch/s', 'yard/s', 'Furlong/Fortnight']
 presunit_list   = ['mmHg','hPa', 'mbar', 'inHg']
 precipunit_list = ['mm', 'inch']
 
 dateshort_list = ['%d/%m/%Y', '%m/%d/%Y', '%Y/%m/%d']
 meridiem_list = ['AM/PM', '/'] 
+
+def get_version():
+    with open(os.path.join(addon_dir, 'addon.xml'), 'r', encoding='utf-8') as addon_xml:
+        return re.search(r'(?<!xml )version="(.+?)"', addon_xml.read()).group(1)
  
 # Fake test objects
 
@@ -34,7 +45,6 @@ def fake_log(msg, level='DEBUG'):
     print('%s: %s' %(level, msg))
 
 def fake_getRegion(id_):
-
     if id_ == 'tempunit':
         value = tempunit_list[0]
     elif id_ == 'speedunit':
@@ -46,14 +56,22 @@ def fake_getRegion(id_):
 
     return value
 
+def fake_getInfoLabel(label_id):
+    if label_id == 'System.BuildVersion':
+        if PY26:
+            return '15.2'
+        elif PY27:
+            return '17.6'
+        else:
+            return '19.0'
+    
 def fake_getLanguage():
-    #list = ['Belarusian', 'English', 'German', 'Latvian', 'Lithuanian', 'Polish', 'Romanian', 'Russian', 'Ukrainian']
-    #return list[random.randint(0, len(list)-1)]
     return 'English'
 
 def fake_getLocalizedString(id_):
     return u''
 
+@python_2_unicode_compatible
 class FakeAddon(object):
     def __init__(self, id_='test.addon'):
         if id_:
@@ -77,23 +95,20 @@ class FakeAddon(object):
                           'TimeZone': '0',
                           'PresUnit': '0',
                           'PrecipUnit': '0',
-#                          'Language': '%d' % random.randint(0,8),
-#                          'Weekend': '%d' % random.randint(0,2),
-#                          'TimeZone': '%d' % random.randint(0,1),
-#                          'PresUnit': '%d' % random.randint(0,3),
-#                          'PrecipUnit': '%d' % random.randint(0,1),
                           }        
 
     def getAddonInfo(self, info_id):
         value = None
         if info_id == 'path':
-            value = plugin_dir
+            value = addon_dir
         elif info_id == 'profile':
             value = config_dir
         elif info_id == 'id':
             value = self._id
         elif info_id == 'version':
-            value = '0.0.0'
+            value = get_version()
+        elif info_id == 'name':
+            value = 'Addon name'
         
         #fake_log('Addon:getAddonInfo(%s) - %s' % (info_id, value))
 
@@ -101,9 +116,6 @@ class FakeAddon(object):
 
     def getSetting(self, setting_id):
         value = self._settings.get(setting_id, '')
-        
-        #fake_log('Addon:getSetting(%s) - %s' % (setting_id, value))
-        
         return value
         
 
@@ -115,7 +127,7 @@ class FakeAddon(object):
     def getLocalizedString(self, id_):
         return u''
 
-
+@python_2_unicode_compatible
 class FakeWindow(object):
     def __init__(self, id_=-1):
         self._id = id_
@@ -126,8 +138,6 @@ class FakeWindow(object):
 
     def setProperty(self, key, value):
         self._contents[key] = value
-        #if value:
-        #    fake_log('Window:setProperty(%s, %s)' % (key, str(value)))
 
     def clearProperty(self, key):
         del self._contents[key]
@@ -139,6 +149,7 @@ class FakeMonitor(object):
     def abortRequested(self):
         return False
     
+@python_2_unicode_compatible
 class FakeKeyboard(object):
     def __init__(self, default='', heading='', hidden=False):
         self._text = ''
@@ -151,13 +162,14 @@ class FakeKeyboard(object):
     
     def getText(self):
         if not self._text:
-            list = ['London', 'Paris', 'Kiev', 'Moskow']
+            list = ['Donetsk']
             self._text = list[random.randint(0, len(list)-1)]
 
             fake_log('Keyboard:getText - "%s"' % self._text)
         
         return self._text
 
+@python_2_unicode_compatible
 class FakeDialog(object):
     def __init__(self):
         pass
@@ -175,7 +187,7 @@ class FakeDialog(object):
 # Mock Kodi Python API
 
 mock_xbmcaddon = mock.MagicMock()
-mock_xbmcaddon.Addon.side_effect = FakeAddon
+mock_xbmcaddon.Addon = FakeAddon
 
 mock_xbmc = mock.MagicMock()
 mock_xbmc.LOGDEBUG = 'DEBUG'
@@ -187,14 +199,13 @@ mock_xbmc.getLocalizedString.side_effect = fake_getLocalizedString
 mock_xbmc.log.side_effect = fake_log
 mock_xbmc.getRegion.side_effect = fake_getRegion
 mock_xbmc.getLanguage.side_effect = fake_getLanguage
+mock_xbmc.getInfoLabel.side_effect = fake_getInfoLabel
 mock_xbmc.Monitor = FakeMonitor
 mock_xbmc.Keyboard = FakeKeyboard
 
 mock_xbmcplugin = mock.MagicMock()
 
 mock_xbmcgui = mock.MagicMock()
-mock_ListItem = mock.MagicMock()
-mock_xbmcgui.ListItem.return_value = mock_ListItem
 mock_xbmcgui.Window = FakeWindow
 mock_xbmcgui.Dialog = FakeDialog
 
@@ -204,7 +215,7 @@ sys.modules['xbmcplugin'] = mock_xbmcplugin
 sys.modules['xbmcgui'] = mock_xbmcgui
 
 # Import our module being tested
-sys.path.append(plugin_dir)
+sys.path.append(addon_dir)
 
 def tearDownModule():
     shutil.rmtree(config_dir, True)
@@ -214,34 +225,34 @@ class PluginActionsTestCase(unittest.TestCase):
     def setUp(self):
         print('\n# Testing plugin actions')
 
-    @mock.patch('resources.lib.simpleplugin.sys.argv', [plugin_name, '1'])
+    @mock.patch('resources.lib.simpleweather.sys.argv', [plugin_name, '1'])
     def test_forecast_1_current(self):
         print('# forecast_1_current')
-        imp.load_source('__main__',  os.path.join(plugin_dir,'default.py'))
+        imp.load_source('__main__',  default_script)
 
-    @mock.patch('resources.lib.simpleplugin.sys.argv', [plugin_name, '2'])
+    @mock.patch('resources.lib.simpleweather.sys.argv', [plugin_name, '2'])
     def test_forecast_2(self):
         print('# forecast_2')
-        imp.load_source('__main__',  os.path.join(plugin_dir,'default.py'))
+        imp.load_source('__main__',  default_script)
 
-    @mock.patch('resources.lib.simpleplugin.sys.argv', [plugin_name, '3'])
+    @mock.patch('resources.lib.simpleweather.sys.argv', [plugin_name, '3'])
     def test_forecast_3(self):
         print('# forecast_3')
-        imp.load_source('__main__',  os.path.join(plugin_dir,'default.py'))
+        imp.load_source('__main__',  default_script)
 
-    @mock.patch('resources.lib.simpleplugin.sys.argv', [plugin_name, 'action=location&id=1'])
+    @mock.patch('resources.lib.simpleweather.sys.argv', [plugin_name, 'action=location&id=1'])
     def test_location(self):
         print('# location')
-        imp.load_source('__main__',  os.path.join(plugin_dir,'default.py'))
+        imp.load_source('__main__',  default_script)
 
-    @mock.patch('resources.lib.simpleplugin.sys.argv', [plugin_name, 'action=clear_cache'])
+    @mock.patch('resources.lib.simpleweather.sys.argv', [plugin_name, 'action=clear_cache'])
     def test_clear_cache(self):
         print('# clear_cache')
         if not os.path.exists(cache_dir):
             os.makedirs(cache_dir)
         open(os.path.join(cache_dir, 'test.tmp'), 'a').close() 
 
-        imp.load_source('__main__',  os.path.join(plugin_dir,'default.py'))
+        imp.load_source('__main__',  default_script)
 
 class APIExtendedTestCase(unittest.TestCase):
 
@@ -249,7 +260,8 @@ class APIExtendedTestCase(unittest.TestCase):
         print('\n# API extended tests')
         from resources.lib.gismeteo import Gismeteo
 
-        params = {'cache_dir': cache_dir}
+        params = {'lang': 'en',
+                  'cache_dir': cache_dir}
         self.gismeteo = Gismeteo(params)
 
     def test_cities_nearby(self):
@@ -291,7 +303,7 @@ class UtilitiesModuleExtendedTestCase(unittest.TestCase):
         deg = 10
         
         for tempunit in tempunit_list:
-            utilities.TEMPUNIT = tempunit.decode('utf-8')
+            utilities.TEMPUNIT = tempunit
             value = utilities.TEMP(deg)
             fake_log(u'{0} °C is {1} {2}'.format(deg, value, utilities.TEMPUNIT))
 
@@ -330,7 +342,7 @@ class DefaultModuleExtendedTestCase(unittest.TestCase):
         import default
         print('# get_lang')
 
-        for lang_id in xrange(0, 9):
+        for lang_id in range(0, 9):
             default.weather.set_setting('Language', str(lang_id))
             val = default.get_lang()
             fake_log('Language id {0} is "{1}"'.format(lang_id, val))
@@ -339,10 +351,17 @@ class DefaultModuleExtendedTestCase(unittest.TestCase):
         import default
         print('# get_weekends')
 
-        for weekend_id in xrange(0, 3):
+        for weekend_id in range(0, 3):
             default.weather.set_setting('Weekend', str(weekend_id))
             val = default.get_weekends()
             fake_log('Weekend id {0} is "{1}"'.format(weekend_id, val))
+
+    def test_get_wind_direction(self):
+        import default
+        print('# get_wind_direction')
+
+        for direct in [0, None]:
+            val = default.get_wind_direction(direct)
 
 
 if __name__ == '__main__':
