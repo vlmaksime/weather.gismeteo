@@ -126,7 +126,7 @@ msgstr "Русский"
 
 msgctxt "#32202"
 msgid "Ukrainian"
-msgstr ""
+msgstr "Украинский"
 
 msgctxt "#32203"
 msgid "Lithuanian"
@@ -217,7 +217,7 @@ msgstr "узлы"
 #Wind direction
 
 msgctxt "#32420"
-msgid "сalm"
+msgid "calm"
 msgstr "штиль"
 
 #Precipitation

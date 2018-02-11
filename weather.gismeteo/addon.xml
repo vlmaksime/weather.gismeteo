@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="weather.gismeteo" version="0.2.3" name="Gismeteo" provider-name="vl.maksime">
+<addon id="weather.gismeteo" version="0.3.1" name="Gismeteo" provider-name="vl.maksime">
     <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="xbmc.python" version="2.19.0"/>
+        <import addon="script.module.future"/>
+        <import addon="script.module.simpleplugin3"/>
     </requires>
     <extension point="xbmc.python.weather" library="default.py"/>
     <extension point="xbmc.addon.metadata">
@@ -18,7 +20,7 @@
         <website>https://www.gismeteo.ru/</website>
         <email>vl.maksime@gmail.com</email>
         <source>https://github.com/vlmaksime/weather.gismeteo</source>
-        <news>v0.2.3 (2017-12-23)[CR]- Исправлена ошибка совместимости с KODI 16.1 на Android 4.4[CR][CR]v0.2.2 (2017-12-10)[CR]- Исправлены выявленные ошибки[CR]- Добавлен выбор единиц измерения для давления и осадков[CR]- Добавлена возможность очистить кэш (Настройки-Экспертный-Очистить кэш)</news>
+        <news>v0.3.1 (2018-02-11)[CR]- Адаптирован для использования библиотеки SimplePlugin 3[CR]- Реализована поддержка Python 3.6 (Совместимость с KODI 19 и выше)[CR]- Исправлены выявленые ошибки</news>
         <assets>
             <icon>icon.png</icon>
         </assets>
