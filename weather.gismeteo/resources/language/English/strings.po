@@ -217,7 +217,7 @@ msgstr ""
 #Wind direction
 
 msgctxt "#32420"
-msgid "сalm"
+msgid "calm"
 msgstr ""
 
 #Precipitation

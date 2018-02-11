@@ -2,6 +2,8 @@
 # Module: default
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
+from builtins import str
+from builtins import range
 import os
 import time
 
@@ -10,6 +12,9 @@ import xbmcgui
 
 from resources.lib.gismeteo import Gismeteo
 from resources.lib.utilities import *
+from simpleplugin import py2_decode, py2_encode
+
+weather = Weather()
 
 _ = weather.initialize_gettext()
 
@@ -29,14 +34,14 @@ KODILANGUAGE   = xbmc.getLanguage().lower()
 
 CURRENT_TIME = {'unix': time.time()}
 
-CACHE_DIR = os.path.join(weather.config_dir, 'cache')
+CACHE_DIR = os.path.join(weather.profile_dir, 'cache')
 
 class MyMonitor(xbmc.Monitor):
     def __init__(self, *args, **kwargs):
         xbmc.Monitor.__init__(self)
 
 def get_lang():
-    lang_id = weather.Language
+    lang_id = weather.get_setting('Language')
     if lang_id == 0: #System interface
         lang = LANG[KODILANGUAGE] if LANG[KODILANGUAGE] is not '' else 'en'
     elif lang_id == 1:
@@ -62,11 +67,11 @@ def is_weekend(day):
     return (get_weekday(day['date'], 'x') in WEEKENDS)
 
 def get_weekends():
-    weekend = weather.Weekend
+    weekend = weather.get_setting('Weekend')
 
-    if weekend == '2':
+    if weekend == 2:
         weekends = [4,5]
-    elif weekend == '1':
+    elif weekend == 1:
         weekends = [5,6]
     else:
         weekends = [6,0]
@@ -74,7 +79,7 @@ def get_weekends():
     return weekends
 
 def get_timestamp(date):
-    if weather.TimeZone == 0:
+    if weather.get_setting('TimeZone') == 0:
         stamp = time.localtime(date['unix'])
     else:
         stamp = time.gmtime(date['unix'] + date['offset'] * 60)
@@ -83,7 +88,7 @@ def get_timestamp(date):
 
 def get_location_name(location):
     if location['kind'] == 'A':
-        location_name = u'%s %s' %(_('a/p').decode('utf-8'), location['name'])
+        location_name = u'{0} {1}'.format(_('a/p'), location['name'])
     else:
         location_name = location['name']
     return location_name
@@ -142,7 +147,7 @@ def get_wind_direction(value):
     if WIND_DIRECTIONS.get(value) is not None:
         return xbmc.getLocalizedString(WIND_DIRECTIONS.get(value))
     elif value == '0':
-        return _('сalm')
+        return _('calm')
     else:
         return _('n/a')
 
@@ -258,7 +263,7 @@ def get_struct(type):
     return struct
 
 def set_item_info(props, item, type, icon='%s.png', day_temp=None):
-    keys = props.keys()
+    keys = list(props.keys())
 
     # Date
     date = item['date']
@@ -314,13 +319,13 @@ def set_item_info(props, item, type, icon='%s.png', day_temp=None):
         props['Wind'] = int(round(speed * 3.6))
 
     if 'WindSpeed' in keys:
-        props['WindSpeed'] = '%s %s' % (SPEED(speed), _(SPEEDUNIT).decode('utf-8'))
+        props['WindSpeed'] = u'{0} {1}'.format(SPEED(speed), _(SPEEDUNIT))
 
     if 'WindDirection' in keys:
         props['WindDirection'] = get_wind_direction(wind['direction'])
 
     if 'MaxWind' in keys:
-        props['MaxWind'] = '%s %s' % (SPEED(wind['speed']['max']), _(SPEEDUNIT).decode('utf-8'))
+        props['MaxWind'] = u'{0} {1}'.format(SPEED(wind['speed']['max']), _(SPEEDUNIT))
 
 
     # Temperature
@@ -369,29 +374,29 @@ def set_item_info(props, item, type, icon='%s.png', day_temp=None):
 
     if 'Humidity' in keys:
         humidity =  item['humidity']['avg'] if type == 'day' else item['humidity']
-        tpl = '%i%%' if type != 'cur' else '%i'
-        props['Humidity'] = tpl % (humidity) if humidity is not None else _('n/a')
+        tpl = u'{0}%' if type != 'cur' else u'{0}'
+        props['Humidity'] = tpl.format(humidity) if humidity is not None else _('n/a')
 
     if 'MinHumidity' in keys and type == 'day':
         humidity =  item['humidity']['min']
-        props['MinHumidity'] = '%i%%' % (humidity) if humidity is not None else _('n/a')
+        props['MinHumidity'] = u'{0}%'.format(humidity) if humidity is not None else _('n/a')
 
     if 'MaxHumidity' in keys and type == 'day':
         humidity =  item['humidity']['max']
-        props['MaxHumidity'] = '%i%%' % (humidity) if humidity is not None else _('n/a')
+        props['MaxHumidity'] = u'{0}%'.format(humidity) if humidity is not None else _('n/a')
 
 
     # Pressure
 
     if 'Pressure' in keys:
         pressure =  item['pressure']['avg'] if type == 'day' else item['pressure']
-        props['Pressure'] = '%s %s' % (PRESSURE(pressure),  _(PRESUNIT)) if pressure is not None else _('n/a')
+        props['Pressure'] = u'{0} {1}'.format(PRESSURE(pressure),  _(PRESUNIT)) if pressure is not None else _('n/a')
 
     # Precipitation
 
     if 'Precipitation' in keys:
         precip = item['precipitation']['amount']
-        props['Precipitation'] = '%s %s' % (PRECIPITATION(precip), _(PRECIPUNIT)) if precip is not None else _('n/a')
+        props['Precipitation'] = u'{0} {1}'.format(PRECIPITATION(precip), _(PRECIPUNIT)) if precip is not None else _('n/a')
 
 def clear():
 
@@ -437,7 +442,7 @@ def clear():
 
 def refresh_locations():
     locations = 0
-    if weather.CurrentLocation:
+    if weather.get_setting('CurrentLocation'):
         location = gismeteo.cities_ip()
         if location is not None:
             loc_name = location['name']
@@ -583,7 +588,7 @@ def set_location_props(forecast_info):
     for count in range (count_36hour + 1, MAX_36HOUR + 1):
         weather.set_properties(_36hour_props, '36Hour', count)
 
-@weather.action()
+@weather.action('root')
 def forecast(params):
     data = None
 
@@ -613,16 +618,16 @@ def location(params):
     keyboard = xbmc.Keyboard('', xbmc.getLocalizedString(14024), False)
     keyboard.doModal()
     if (keyboard.isConfirmed() and keyboard.getText() != ''):
-        text = keyboard.getText()
+        text = py2_encode(keyboard.getText())
         dialog = xbmcgui.Dialog()
 
         for location in gismeteo.cities_search(text):
             location_name = get_location_name(location)
 
             if location['district']:
-                labels.append('%s (%s, %s)' % (location_name, location['district'], location['country']))
+                labels.append(u'{0} ({1}, {2})'.format(location_name, location['district'], location['country']))
             else:
-                labels.append('%s (%s)' % (location_name, location['country']))
+                labels.append(u'{0} ({1})'.format(location_name, location['country']))
             locations.append({'id':location['id'], 'name': location_name})
 
         if len(locations) > 0:
@@ -644,7 +649,7 @@ def clear_cache():
             os.remove(file_path)
 
 def get_location(id):
-    if id == '1' and weather.CurrentLocation:
+    if id == '1' and weather.get_setting('CurrentLocation'):
         location = gismeteo.cities_ip()
         if location is not None:
             location_name = get_location_name(location)
@@ -653,7 +658,7 @@ def get_location(id):
             location_name = ''
             location_id = ''
     else:
-        _id = id if not weather.CurrentLocation else str((int(id) - 1))
+        _id = id if not weather.get_setting('CurrentLocation') else str((int(id) - 1))
         location_name = weather.get_setting('Location%s' % _id, False)
         location_id = weather.get_setting('Location%sID' % _id, False)
 
@@ -682,10 +687,10 @@ if __name__ == '__main__':
     # WeatherProvider
     # standard properties
     weather.set_property('WeatherProvider'    , weather.name)
-    weather.set_property('WeatherProviderLogo', xbmc.translatePath(os.path.join(weather.path, 'resources', 'media', 'banner.png')).decode("utf-8"))
+    weather.set_property('WeatherProviderLogo', py2_decode(xbmc.translatePath(os.path.join(weather.path, 'resources', 'media', 'banner.png'))))
 
     conf = {'lang': get_lang(),
-            'cache_dir':  CACHE_DIR,
+            'cache_dir': CACHE_DIR,
             'cache_time': 30, # time in minutes
             }
     gismeteo = Gismeteo(conf)
