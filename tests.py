@@ -30,12 +30,12 @@ presunit_list   = ['mmHg','hPa', 'mbar', 'inHg']
 precipunit_list = ['mm', 'inch']
 
 dateshort_list = ['%d/%m/%Y', '%m/%d/%Y', '%Y/%m/%d']
-meridiem_list = ['AM/PM', '/'] 
+meridiem_list = ['AM/PM', '/']
 
 def get_version():
     with open(os.path.join(addon_dir, 'addon.xml'), 'r', encoding='utf-8') as addon_xml:
         return re.search(r'(?<!xml )version="(.+?)"', addon_xml.read()).group(1)
- 
+
 # Fake test objects
 
 def fake_translate_path(path):
@@ -64,7 +64,7 @@ def fake_getInfoLabel(label_id):
             return '17.6'
         else:
             return '19.0'
-    
+
 def fake_getLanguage():
     return 'English'
 
@@ -95,7 +95,7 @@ class FakeAddon(object):
                           'TimeZone': '0',
                           'PresUnit': '0',
                           'PrecipUnit': '0',
-                          }        
+                          }
 
     def getAddonInfo(self, info_id):
         value = None
@@ -109,7 +109,7 @@ class FakeAddon(object):
             value = get_version()
         elif info_id == 'name':
             value = 'Addon name'
-        
+
         #fake_log('Addon:getAddonInfo(%s) - %s' % (info_id, value))
 
         return value
@@ -117,7 +117,7 @@ class FakeAddon(object):
     def getSetting(self, setting_id):
         value = self._settings.get(setting_id, '')
         return value
-        
+
 
     def setSetting(self, setting_id, value):
         self._settings[setting_id] = value
@@ -145,28 +145,26 @@ class FakeWindow(object):
 class FakeMonitor(object):
     def __init__(self):
         pass
-    
+
     def abortRequested(self):
         return False
-    
+
 @python_2_unicode_compatible
 class FakeKeyboard(object):
     def __init__(self, default='', heading='', hidden=False):
         self._text = ''
-    
+
     def doModal(self, autoclose=None):
         pass
-    
+
     def isConfirmed(self):
         return True
-    
+
     def getText(self):
         if not self._text:
-            list = ['Donetsk']
-            self._text = list[random.randint(0, len(list)-1)]
-
+            self._text = 'Donetsk'
             fake_log('Keyboard:getText - "%s"' % self._text)
-        
+
         return self._text
 
 @python_2_unicode_compatible
@@ -174,16 +172,16 @@ class FakeDialog(object):
     def __init__(self):
         pass
 
-    def select(self, heading, list , autoclose=False, preselect=None, useDetails=False):
+    def select(self, heading, items_list , autoclose=False, preselect=None, useDetails=False):
         fake_log('Dialog:select - list')
-        for item in list:
+        for item in items_list:
             fake_log(item)
-        
-        return random.randint(0, len(list)-1)
-    
+
+        return random.randint(0, len(items_list)-1)
+
     def ok(self, heading, line1 , line2='', line3=''):
         fake_log('Dialog:ok(%s, %s, %s, %s)' % (heading, line1, line2, line3))
-    
+
 # Mock Kodi Python API
 
 mock_xbmcaddon = mock.MagicMock()
@@ -219,7 +217,7 @@ sys.path.append(addon_dir)
 
 def tearDownModule():
     shutil.rmtree(config_dir, True)
-    
+
 class PluginActionsTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -250,7 +248,7 @@ class PluginActionsTestCase(unittest.TestCase):
         print('# clear_cache')
         if not os.path.exists(cache_dir):
             os.makedirs(cache_dir)
-        open(os.path.join(cache_dir, 'test.tmp'), 'a').close() 
+        open(os.path.join(cache_dir, 'test.tmp'), 'a').close()
 
         imp.load_source('__main__',  default_script)
 
@@ -301,7 +299,7 @@ class UtilitiesModuleExtendedTestCase(unittest.TestCase):
         import resources.lib.utilities as utilities
         print('# temp_units')
         deg = 10
-        
+
         for tempunit in tempunit_list:
             utilities.TEMPUNIT = tempunit
             value = utilities.TEMP(deg)
@@ -361,7 +359,7 @@ class DefaultModuleExtendedTestCase(unittest.TestCase):
         print('# get_wind_direction')
 
         for direct in [0, None]:
-            val = default.get_wind_direction(direct)
+            default.get_wind_direction(direct)
 
 
 if __name__ == '__main__':

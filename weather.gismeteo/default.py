@@ -156,9 +156,9 @@ def get_weather_code(item):
     weather_code = WEATHER_CODES.get(item['icon'], 'na')
     return weather_code
 
-def get_struct(type):
+def get_struct(struct_type):
 
-    if type == 'current':
+    if struct_type == 'current':
         struct = { # standart properties
                   'Location':      '',
                   'Condition':     '',
@@ -176,13 +176,13 @@ def get_struct(type):
                   'Precipitation':   '',
                   }
 
-    elif type == 'today':
+    elif struct_type == 'today':
         struct= { # extended properties
                  'Sunrise': '',
                  'Sunset':  '',
                  }
 
-    elif type == 'day':
+    elif struct_type == 'day':
         struct = { # standart properties
                   'Title': '',
                   'HighTemp': '',
@@ -192,7 +192,7 @@ def get_struct(type):
                   'FanartCode':  '',
                   }
 
-    elif type == 'daily':
+    elif struct_type == 'daily':
 
         struct = { # extenden properties
                   'LongDay':            '',
@@ -219,7 +219,7 @@ def get_struct(type):
                   'Precipitation':      '',
                   }
 
-    elif type == 'hourly':
+    elif struct_type == 'hourly':
         struct = { # extenden properties
                   'Time':             '',
                   'LongDate':         '',
@@ -237,7 +237,7 @@ def get_struct(type):
                   'Precipitation':    '',
                   }
 
-    elif type == '36hour':
+    elif struct_type == '36hour':
         struct = { # extenden properties
                   'Heading':            '',
                   'TemperatureHeading': '',
@@ -257,12 +257,10 @@ def get_struct(type):
                   'Pressure':           '',
                   'Precipitation':      '',
                   }
-    else:
-        struct = {}
 
     return struct
 
-def set_item_info(props, item, type, icon='%s.png', day_temp=None):
+def set_item_info(props, item, item_type, icon='%s.png', day_temp=None):
     keys = list(props.keys())
 
     # Date
@@ -330,11 +328,11 @@ def set_item_info(props, item, type, icon='%s.png', day_temp=None):
 
     # Temperature
 
-    if 'DewPoint' in keys and type == 'day':
+    if 'DewPoint' in keys and item_type == 'day':
         props['DewPoint'] = DEW_POINT(item['temperature']['max'], item['humidity']['avg']) + TEMPUNIT
-    elif 'DewPoint' in keys and type == 'hour':
+    elif 'DewPoint' in keys and item_type == 'hour':
         props['DewPoint'] = DEW_POINT(item['temperature']['air'], item['humidity']) + TEMPUNIT
-    elif 'DewPoint' in keys and type == 'cur':
+    elif 'DewPoint' in keys and item_type == 'cur':
         props['DewPoint'] = DEW_POINT(item['temperature']['air'], item['humidity'], False)
 
     if 'HighTemp' in keys:
@@ -349,12 +347,12 @@ def set_item_info(props, item, type, icon='%s.png', day_temp=None):
     if 'HighTemperature' in keys:
         props['LowTemperature'] = TEMP(item['temperature']['min']) + TEMPUNIT
 
-    if 'Temperature' in keys and type == 'cur':
+    if 'Temperature' in keys and item_type == 'cur':
         props['Temperature'] = item['temperature']['air']
     elif 'Temperature' in keys:
         props['Temperature'] = TEMP(item['temperature']['air']) + TEMPUNIT
 
-    if 'FeelsLike' in keys and type == 'cur':
+    if 'FeelsLike' in keys and item_type == 'cur':
         props['FeelsLike'] = item['temperature']['comfort']
     elif 'FeelsLike' in keys:
         props['FeelsLike'] = TEMP(item['temperature']['comfort']) + TEMPUNIT
@@ -373,15 +371,15 @@ def set_item_info(props, item, type, icon='%s.png', day_temp=None):
     # Humidity
 
     if 'Humidity' in keys:
-        humidity =  item['humidity']['avg'] if type == 'day' else item['humidity']
-        tpl = u'{0}%' if type != 'cur' else u'{0}'
+        humidity =  item['humidity']['avg'] if item_type == 'day' else item['humidity']
+        tpl = u'{0}%' if item_type != 'cur' else u'{0}'
         props['Humidity'] = tpl.format(humidity) if humidity is not None else _('n/a')
 
-    if 'MinHumidity' in keys and type == 'day':
+    if 'MinHumidity' in keys and item_type == 'day':
         humidity =  item['humidity']['min']
         props['MinHumidity'] = u'{0}%'.format(humidity) if humidity is not None else _('n/a')
 
-    if 'MaxHumidity' in keys and type == 'day':
+    if 'MaxHumidity' in keys and item_type == 'day':
         humidity =  item['humidity']['max']
         props['MaxHumidity'] = u'{0}%'.format(humidity) if humidity is not None else _('n/a')
 
@@ -389,7 +387,7 @@ def set_item_info(props, item, type, icon='%s.png', day_temp=None):
     # Pressure
 
     if 'Pressure' in keys:
-        pressure =  item['pressure']['avg'] if type == 'day' else item['pressure']
+        pressure =  item['pressure']['avg'] if item_type == 'day' else item['pressure']
         props['Pressure'] = u'{0} {1}'.format(PRESSURE(pressure),  _(PRESUNIT)) if pressure is not None else _('n/a')
 
     # Precipitation
@@ -648,8 +646,8 @@ def clear_cache():
             file_path = os.path.join(CACHE_DIR, file_name)
             os.remove(file_path)
 
-def get_location(id):
-    if id == '1' and weather.get_setting('CurrentLocation'):
+def get_location(loc_id):
+    if loc_id == '1' and weather.get_setting('CurrentLocation'):
         location = gismeteo.cities_ip()
         if location is not None:
             location_name = get_location_name(location)
@@ -658,11 +656,11 @@ def get_location(id):
             location_name = ''
             location_id = ''
     else:
-        _id = id if not weather.get_setting('CurrentLocation') else str((int(id) - 1))
-        location_name = weather.get_setting('Location%s' % _id, False)
-        location_id = weather.get_setting('Location%sID' % _id, False)
+        loc_id = loc_id if not weather.get_setting('CurrentLocation') else str((int(loc_id) - 1))
+        location_name = weather.get_setting('Location%s' % loc_id, False)
+        location_id = weather.get_setting('Location%sID' % loc_id, False)
 
-        if (location_id == '') and (_id != '1'):
+        if (location_id == '') and (loc_id != '1'):
             location_name = weather.get_setting('Location1', False)
             location_id = weather.get_setting('Location1ID', False)
 

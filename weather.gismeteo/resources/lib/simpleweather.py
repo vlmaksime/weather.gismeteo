@@ -4,15 +4,12 @@
 
 from __future__ import unicode_literals
 from past.types import basestring
-from future.utils import (iteritems,
-                          python_2_unicode_compatible)
+from future.utils import python_2_unicode_compatible
 from future import standard_library
 standard_library.install_aliases()
 
 import sys
-import inspect
-from urllib.parse import parse_qs
-from simpleplugin import Plugin, SimplePluginError, py2_decode, py2_encode
+from simpleplugin import Plugin, py2_decode
 import xbmc
 import xbmcgui
 
@@ -28,7 +25,7 @@ class Weather(Plugin):
         self._params = None
 
         self._window = xbmcgui.Window(12600)
-        
+
         self._reg_tempunit = py2_decode(xbmc.getRegion('tempunit'))
         self._reg_speedunit = xbmc.getRegion('speedunit')
         self._reg_dateshort = xbmc.getRegion('dateshort')
@@ -43,7 +40,7 @@ class Weather(Plugin):
 
         :raises SimplePluginError: if unknown action string is provided.
         """
-        
+
         if sys.argv[1].isdigit():
             paramstring = 'id=%s' % (sys.argv[1])
         else:
@@ -70,7 +67,7 @@ class Weather(Plugin):
         else:
             raise TypeError(
                 'value parameter must be of int, str, or unicode type!')
-        
+
     def set_properties(self, properties, category, count=None, sep='.'):
         """
         Set properties of weather window
