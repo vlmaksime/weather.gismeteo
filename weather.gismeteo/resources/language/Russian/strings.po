@@ -114,7 +114,7 @@ msgstr "Осадки"
 
 msgctxt "#32136"
 msgid "Clear cache"
-msgstr "Очистить кеш"
+msgstr "Очистить кэш"
 
 msgctxt "#32200"
 msgid "User interface language"
