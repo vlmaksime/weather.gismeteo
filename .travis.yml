@@ -14,8 +14,10 @@ before_install:
   - python setup.py install
   - cd $TRAVIS_BUILD_DIR
 install:
-  - pip install codecov mock future
+  - pip install codecov codacy-coverage mock future
 script:
   - coverage run tests.py
 after_success:
   - codecov
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
