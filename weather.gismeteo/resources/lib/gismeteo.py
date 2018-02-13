@@ -116,7 +116,11 @@ class Gismeteo(object):
         for key, val in iteritems(url_params):
             url = url.replace(key, str(val))
 
-        req = urlopen(url)
+        try:
+            req = urlopen(url)
+        except IOError:
+            return ''
+
         response = req.read()
         req.close()
 
@@ -290,7 +294,10 @@ class Gismeteo(object):
 
         response = self._http_request('cities_search', url_params)
 
-        return self._get_locations_list(response)
+        if response:
+            return self._get_locations_list(response)
+        else:
+            return None
 
     def cities_ip(self):
         locations = []
@@ -300,9 +307,10 @@ class Gismeteo(object):
 
         response = self._http_request('cities_ip', url_params)
 
-        locations = self._get_locations_list(response)
-        for location in locations:
-            return location
+        if response:
+            locations = self._get_locations_list(response)
+            for location in locations:
+                return location
         return None
 
     def cities_nearby(self, lat, lng, count = 5):
@@ -314,7 +322,10 @@ class Gismeteo(object):
 
         response = self._http_request('cities_nearby', url_params)
 
-        return self._get_locations_list(response)
+        if response:
+            return self._get_locations_list(response)
+        else:
+            None
 
     def forecast(self, city_id):
         url_params = {'#city_id': city_id,
@@ -323,4 +334,7 @@ class Gismeteo(object):
 
         response = self._http_request('forecast', url_params)
 
-        return self._get_forecast_info(response)
+        if response:
+            return self._get_forecast_info(response)
+        else:
+            None

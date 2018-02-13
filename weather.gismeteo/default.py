@@ -12,7 +12,7 @@ import xbmcgui
 
 from resources.lib.gismeteo import Gismeteo
 from resources.lib.utilities import *
-from simpleplugin import py2_decode, py2_encode
+from resources.lib.simpleweather import *
 
 weather = Weather()
 
@@ -619,16 +619,19 @@ def location(params):
         text = py2_encode(keyboard.getText())
         dialog = xbmcgui.Dialog()
 
-        for location in gismeteo.cities_search(text):
-            location_name = get_location_name(location)
+        search_result = gismeteo.cities_search(text)
+        
+        if search_result is not None:
+            for location in search_result:
+                location_name = get_location_name(location)
+    
+                if location['district']:
+                    labels.append(u'{0} ({1}, {2})'.format(location_name, location['district'], location['country']))
+                else:
+                    labels.append(u'{0} ({1})'.format(location_name, location['country']))
+                locations.append({'id':location['id'], 'name': location_name})
 
-            if location['district']:
-                labels.append(u'{0} ({1}, {2})'.format(location_name, location['district'], location['country']))
-            else:
-                labels.append(u'{0} ({1})'.format(location_name, location['country']))
-            locations.append({'id':location['id'], 'name': location_name})
-
-        if len(locations) > 0:
+        if locations:
             selected = dialog.select(xbmc.getLocalizedString(396), labels)
             if selected != -1:
                 selected_location = locations[selected]

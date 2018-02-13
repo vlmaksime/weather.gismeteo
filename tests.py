@@ -267,9 +267,12 @@ class APIExtendedTestCase(unittest.TestCase):
 
         locations = self.gismeteo.cities_nearby('48.02', '37.8')
 
-        print('Search results:')
-        for location in locations:
-            print('%s: %s (%s)' % (location['country'], location['name'], location['district']))
+        if locations is None:
+            print('Connection problems!')
+        else:
+            print('Search results:')
+            for location in locations:
+                print('%s: %s (%s)' % (location['country'], location['name'], location['district']))
 
 class UtilitiesModuleExtendedTestCase(unittest.TestCase):
 

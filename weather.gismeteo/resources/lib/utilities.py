@@ -2,7 +2,6 @@
 # Module: utilities
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-from __future__ import absolute_import
 import math
 from .simpleweather import Weather
 

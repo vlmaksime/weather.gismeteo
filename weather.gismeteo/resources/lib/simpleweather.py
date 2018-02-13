@@ -3,15 +3,15 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from past.types import basestring
-from future.utils import python_2_unicode_compatible
-from future import standard_library
-standard_library.install_aliases()
+from future.utils import (PY2, PY3, python_2_unicode_compatible)
 
 import sys
-from simpleplugin import Plugin, py2_decode
+from .simpleplugin import Plugin, py2_encode, py2_decode
 import xbmc
 import xbmcgui
+
+if PY3:
+    unicode = str
 
 @python_2_unicode_compatible
 class Weather(Plugin):
@@ -62,7 +62,7 @@ class Weather(Plugin):
         """
         if isinstance(value, int):
             self._window.setProperty(name, str(value))
-        elif isinstance(value, (basestring, str)):
+        elif isinstance(value, (str, unicode)):
             self._window.setProperty(name, value)
         else:
             raise TypeError(
