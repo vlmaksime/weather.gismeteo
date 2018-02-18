@@ -3,18 +3,15 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from past.types import basestring
-from future.utils import (iteritems,
-                          python_2_unicode_compatible)
-from future import standard_library
-standard_library.install_aliases()
+from future.utils import (PY3, python_2_unicode_compatible)
 
 import sys
-import inspect
-from urllib.parse import parse_qs
-from simpleplugin import Plugin, SimplePluginError, py2_decode, py2_encode
+from simpleplugin import Plugin, py2_encode, py2_decode
 import xbmc
 import xbmcgui
+
+if PY3:
+    basestring = str
 
 @python_2_unicode_compatible
 class Weather(Plugin):
@@ -28,7 +25,7 @@ class Weather(Plugin):
         self._params = None
 
         self._window = xbmcgui.Window(12600)
-        
+
         self._reg_tempunit = py2_decode(xbmc.getRegion('tempunit'))
         self._reg_speedunit = xbmc.getRegion('speedunit')
         self._reg_dateshort = xbmc.getRegion('dateshort')
@@ -37,13 +34,13 @@ class Weather(Plugin):
     def __str__(self):
         return '<Weather {0}>'.format(sys.argv)
 
-    def run(self, category=None):
+    def run(self):
         """
         Run plugin
 
         :raises SimplePluginError: if unknown action string is provided.
         """
-        
+
         if sys.argv[1].isdigit():
             paramstring = 'id=%s' % (sys.argv[1])
         else:
@@ -65,12 +62,12 @@ class Weather(Plugin):
         """
         if isinstance(value, int):
             self._window.setProperty(name, str(value))
-        elif isinstance(value, (basestring, str)):
+        elif isinstance(value, basestring):
             self._window.setProperty(name, value)
         else:
             raise TypeError(
-                'value parameter must be of int, str, or unicode type!')
-        
+                'value parameter must be of int or str type!')
+
     def set_properties(self, properties, category, count=None, sep='.'):
         """
         Set properties of weather window

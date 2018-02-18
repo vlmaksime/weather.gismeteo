@@ -5,7 +5,6 @@
 from future.utils import (PY3, iteritems)
 
 import os
-import sys
 import time
 import calendar
 if PY3:
@@ -13,7 +12,6 @@ if PY3:
     from io import open
 else:
     from urllib import (urlopen, quote)
-    
 
 import xml.etree.cElementTree as etree
 try:
@@ -22,7 +20,9 @@ except TypeError:
     import xml.etree.ElementTree as etree
 
 class Cache(object):
-    def __init__(self, params = {}):
+    def __init__(self, params=None):
+        params = params or {}
+
         self._cache_dir = params.get('cache_dir', '')
         self._cache_time = params.get('cache_time', 0)
         self._time_delta = self._cache_time * 60
@@ -88,7 +88,8 @@ class Cache(object):
 
 class Gismeteo(object):
 
-    def __init__(self, params = {}):
+    def __init__(self, params=None):
+        params = params or {}
 
         self._lang = params.get('lang', 'en')
 
@@ -102,7 +103,8 @@ class Gismeteo(object):
                          'forecast':      base_url + '/forecast/?city=#city_id&lang=#lang',
                          }
 
-    def _http_request( self, action, url_params={} ):
+    def _http_request( self, action, url_params=None ):
+        url_params = url_params or {}
 
         if self._use_cache(action):
             file_name = self._get_file_name(action, url_params)
@@ -114,7 +116,11 @@ class Gismeteo(object):
         for key, val in iteritems(url_params):
             url = url.replace(key, str(val))
 
-        req = urlopen(url)
+        try:
+            req = urlopen(url)
+        except IOError:
+            return ''
+
         response = req.read()
         req.close()
 
@@ -152,10 +158,7 @@ class Gismeteo(object):
             local_stamp = 0
 
             while local_stamp == 0:
-                try:
-                    local_stamp = calendar.timegm(time.strptime(local_date, '%Y-%m-%dT%H:%M:%S'))
-                except:
-                    pass
+                local_stamp = calendar.timegm(time.strptime(local_date, '%Y-%m-%dT%H:%M:%S'))
 
         utc_stamp = local_stamp - tzone * 60
         result = {'local': local_date,
@@ -166,7 +169,7 @@ class Gismeteo(object):
 
     def _get_file_name(self, action, url_params):
             file_name = action
-            for key, val in iteritems(url_params):
+            for val in iteritems(url_params):
                 file_name = '%s_%s' % (file_name, val)
 
             return file_name + '.xml'
@@ -291,7 +294,10 @@ class Gismeteo(object):
 
         response = self._http_request('cities_search', url_params)
 
-        return self._get_locations_list(response)
+        if response:
+            return self._get_locations_list(response)
+        else:
+            return None
 
     def cities_ip(self):
         locations = []
@@ -301,9 +307,10 @@ class Gismeteo(object):
 
         response = self._http_request('cities_ip', url_params)
 
-        locations = self._get_locations_list(response)
-        for location in locations:
-            return location
+        if response:
+            locations = self._get_locations_list(response)
+            for location in locations:
+                return location
         return None
 
     def cities_nearby(self, lat, lng, count = 5):
@@ -315,7 +322,10 @@ class Gismeteo(object):
 
         response = self._http_request('cities_nearby', url_params)
 
-        return self._get_locations_list(response)
+        if response:
+            return self._get_locations_list(response)
+        else:
+            return None
 
     def forecast(self, city_id):
         url_params = {'#city_id': city_id,
@@ -324,4 +334,7 @@ class Gismeteo(object):
 
         response = self._http_request('forecast', url_params)
 
-        return self._get_forecast_info(response)
+        if response:
+            return self._get_forecast_info(response)
+        else:
+            return None
