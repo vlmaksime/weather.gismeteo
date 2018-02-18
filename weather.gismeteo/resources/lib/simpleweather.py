@@ -3,15 +3,15 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from future.utils import (PY2, PY3, python_2_unicode_compatible)
+from future.utils import (PY3, python_2_unicode_compatible)
 
 import sys
-from .simpleplugin import Plugin, py2_encode, py2_decode
+from simpleplugin import Plugin, py2_encode, py2_decode
 import xbmc
 import xbmcgui
 
 if PY3:
-    unicode = str
+    basestring = str
 
 @python_2_unicode_compatible
 class Weather(Plugin):
@@ -34,7 +34,7 @@ class Weather(Plugin):
     def __str__(self):
         return '<Weather {0}>'.format(sys.argv)
 
-    def run(self, category=None):
+    def run(self):
         """
         Run plugin
 
@@ -62,11 +62,11 @@ class Weather(Plugin):
         """
         if isinstance(value, int):
             self._window.setProperty(name, str(value))
-        elif isinstance(value, (str, unicode)):
+        elif isinstance(value, basestring):
             self._window.setProperty(name, value)
         else:
             raise TypeError(
-                'value parameter must be of int, str, or unicode type!')
+                'value parameter must be of int or str type!')
 
     def set_properties(self, properties, category, count=None, sep='.'):
         """

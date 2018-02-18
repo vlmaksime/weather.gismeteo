@@ -620,11 +620,11 @@ def location(params):
         dialog = xbmcgui.Dialog()
 
         search_result = gismeteo.cities_search(text)
-        
+
         if search_result is not None:
             for location in search_result:
                 location_name = get_location_name(location)
-    
+
                 if location['district']:
                     labels.append(u'{0} ({1}, {2})'.format(location_name, location['district'], location['country']))
                 else:

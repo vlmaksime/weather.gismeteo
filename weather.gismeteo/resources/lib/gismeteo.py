@@ -325,7 +325,7 @@ class Gismeteo(object):
         if response:
             return self._get_locations_list(response)
         else:
-            None
+            return None
 
     def forecast(self, city_id):
         url_params = {'#city_id': city_id,
@@ -337,4 +337,4 @@ class Gismeteo(object):
         if response:
             return self._get_forecast_info(response)
         else:
-            None
+            return None
