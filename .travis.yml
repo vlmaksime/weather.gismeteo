@@ -2,17 +2,14 @@ branches:
   only:
     - develop
     - master
+    - kodi-release
 language: python
 python:
   - "2.6"
   - "2.7"
   - "3.6"
 before_install:
-  - wget https://github.com/romanvm/script.module.simpleplugin/archive/develop.tar.gz -O /tmp/simpleplugin.tar.gz
-  - tar -xvf /tmp/simpleplugin.tar.gz -C /tmp
-  - cd /tmp/script.module.simpleplugin-develop
-  - python setup.py install
-  - cd $TRAVIS_BUILD_DIR
+  - pip install https://github.com/romanvm/script.module.simpleplugin/archive/develop.zip
 install:
   - pip install codecov codacy-coverage mock future
 script:
