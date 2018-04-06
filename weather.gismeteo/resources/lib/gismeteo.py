@@ -169,8 +169,8 @@ class Gismeteo(object):
 
     def _get_file_name(self, action, url_params):
             file_name = action
-            for val in iteritems(url_params):
-                file_name = '%s_%s' % (file_name, val)
+            for key, val in iteritems(url_params):
+                file_name = '{0}_{1}'.format(file_name, val)
 
             return file_name + '.xml'
 
@@ -224,7 +224,8 @@ class Gismeteo(object):
                                    'amount': xml_values.attrib.get('prflt'),
                                    'intensity': xml_values.attrib['pr'],
                                    }
-        if xml_values.attrib.get('ph') is not None:
+        if xml_values.attrib.get('ph') is not None \
+          and xml_values.attrib['ph']:
             result['phenomenon'] = int(xml_values.attrib['ph']),
         if xml_item.attrib.get('tod') is not None:
             result['tod'] = int(xml_item.attrib['tod'])
