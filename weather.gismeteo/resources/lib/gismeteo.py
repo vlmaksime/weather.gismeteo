@@ -7,6 +7,8 @@ from future.utils import (PY3, iteritems)
 import os
 import time
 import calendar
+import _strptime
+
 if PY3:
     from urllib.request import (urlopen, quote)
     from io import open
