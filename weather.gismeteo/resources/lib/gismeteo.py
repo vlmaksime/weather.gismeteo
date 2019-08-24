@@ -97,7 +97,7 @@ class Gismeteo(object):
 
         self._cache = Cache(params) if params.get('cache_dir') is not None else None
 
-        base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
+        base_url = 'http://services.gismeteo.ru/inform-service/inf_chrome'
 
         self._actions = {'cities_search': base_url + '/cities/?startsWith=#keyword&lang=#lang',
                          'cities_ip':     base_url + '/cities/?mode=ip&count=1&nocache=1&lang=#lang',
