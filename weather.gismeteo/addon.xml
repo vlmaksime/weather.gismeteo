@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="weather.gismeteo" version="0.4.1~beta1" name="Gismeteo" provider-name="vl.maksime">
+<addon id="weather.gismeteo" version="0.4.1" name="Gismeteo" provider-name="vl.maksime">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0"/>
 		<import addon="script.module.future" version="0.16.0.4"/>
@@ -24,7 +24,7 @@
 		<website>https://www.gismeteo.ru/</website>
 		<email>vl.maksime@gmail.com</email>
 		<source>https://github.com/vlmaksime/weather.gismeteo</source>
-		<news>v0.3.3 (2018-04-07)[CR]- Исправлена ошибка разбора данных XML[CR][CR]v0.3.2 (2018-02-18)[CR]- Исправлена ошибка совместимости с Android и LibreELEC</news>
+		<news>v0.4.1 (2020-05-03)[CR]- Изменен механизм кэширования данных[CR]- исправлены выявленные ошибки</news>
 		<assets>
 			<icon>icon.png</icon>
 		</assets>

@@ -42,7 +42,7 @@ class WebClient(requests.Session):
 
         if headers is not None:
             self.headers.update(headers)
-            
+
         self._addon = simpleplugin.Addon()
 
     def __save_cookies(self):
@@ -83,7 +83,7 @@ class WebClient(requests.Session):
             if r.headers.get('set-cookie') is not None:
                 self.__save_cookies()
             return r
-        
+
     def _log_debug(self, response):
         debug_info = []
 
@@ -93,13 +93,13 @@ class WebClient(requests.Session):
             request_info = self._get_request_info(request)
             if request:
                 debug_info.append(request_info)
-            
+
         if response is not None:
             response_info = self._get_response_info(response)
             if response_info:
                 debug_info.append(response_info)
 
-        self._addon.log_debug('\n'.join(debug_info)) 
+        self._addon.log_debug('\n'.join(debug_info))
 
     def _log_error(self, error):
         error_info = [str(error)]
@@ -116,8 +116,8 @@ class WebClient(requests.Session):
             response_info = self._get_response_info(response)
             if response_info:
                 error_info.append(response_info)
-            
-        self._addon.log_error('\n'.join(error_info)) 
+
+        self._addon.log_error('\n'.join(error_info))
 
     @staticmethod
     def _get_response_info(response):
@@ -157,7 +157,7 @@ class WebClient(requests.Session):
                         if field in cls._secret_data:
                             data = data.replace(param, '{0}=<SECRET>'.format(field))
             request_info.append('Data: {0}'.format(data))
-        
+
         return '\n'.join(request_info)
 
 
@@ -402,7 +402,7 @@ class Dialogs():
             heading = self.gettext('Connection error')
         else:
             self.log_error(message)
-    
+
         if show_dialog:
             if heading:
                 self.dialog_ok(heading, message)

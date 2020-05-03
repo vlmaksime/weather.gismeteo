@@ -210,7 +210,7 @@ def refresh_locations():
 
         locations += 1
         weather.set_property('Location{0}'.format(locations), location.name)
- 
+
     for count in range(1, MAX_LOCATIONS + 1):
         loc_name = weather.get_setting('Location{0}'.format(count))
         if loc_name:
