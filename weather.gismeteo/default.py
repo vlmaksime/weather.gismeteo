@@ -9,7 +9,7 @@ import time
 
 import xbmc
 
-from resources.libs import Gismeteo, GismeteoError, Location, Weather
+from resources.libs import Gismeteo, GismeteoError, Location, Weather, WebClientError
 
 weather = Weather()
 _ = weather.initialize_gettext()
@@ -161,20 +161,13 @@ def set_item_info(props, item, item_type, icon='%s.png', day_temp=None):
 def clear():
 
     # Current
-    weather.set_properties(wp.current(), 'Current')
+    weather.set_properties(weather.prop_current(), 'Current')
 
     # Today
-    # extenden properties
-    weather.set_property('Today.Sunset'  , '')
-    weather.set_property('Today.Sunrise' , '')
+    weather.set_properties(weather.prop_today(), 'Today')
 
     # Forecast
-    # extenden properties
-    weather.set_property('Forecast.City'      , '')
-    weather.set_property('Forecast.Country'   , '')
-    weather.set_property('Forecast.Latitude'  , '')
-    weather.set_property('Forecast.Longitude' , '')
-    weather.set_property('Forecast.Updated'   , '')
+    weather.set_properties(weather.prop_forecast(), 'Forecast')
 
     # Day
     day_props = weather.prop_day()
@@ -206,17 +199,18 @@ def refresh_locations():
     if weather.get_setting('CurrentLocation'):
         try:
             lang = weather.gismeteo_lang()
-            ip_locations = Gismeteo(lang).cities_ip()
-        except (GismeteoError) as e:
+            ip_locations = _ip_locations(lang)
+        except (GismeteoError, WebClientError) as e:
             weather.notify_error(e)
+            location = Location()
         else:
             for ip_location in ip_locations:
                 location = Location(ip_location)
-                if location.name:
-                    locations += 1
-                    weather.set_property('Location{0}'.format(locations), location.name)
                 break
 
+        locations += 1
+        weather.set_property('Location{0}'.format(locations), location.name)
+ 
     for count in range(1, MAX_LOCATIONS + 1):
         loc_name = weather.get_setting('Location{0}'.format(count))
         if loc_name:
@@ -245,14 +239,14 @@ def set_location_props(forecast_info):
     weather.set_properties(current_props, 'Current')
 
     # Forecast
-    forecast_props = {  # extended properties
-                      'City':      forecast_info['name'],
-                      'Country':   forecast_info['country'],
-                      'State':     forecast_info['district'],
-                      'Latitude':  forecast_info['lat'],
-                      'Longitude': forecast_info['lng'],
-                      'Updated':   weather.convert_date(forecast_info['cur_time']),
-                      }
+    forecast_props = weather.prop_forecast()
+    forecast_props['City'] = forecast_info['name']
+    forecast_props['Country'] = forecast_info['country']
+    forecast_props['State'] = forecast_info['district']
+    forecast_props['Latitude'] = forecast_info['lat']
+    forecast_props['Longitude'] = forecast_info['lng']
+    forecast_props['Updated'] = weather.convert_date(forecast_info['cur_time'])
+
     weather.set_properties(forecast_props, 'Forecast')
 
     # Today
@@ -357,14 +351,13 @@ def set_location_props(forecast_info):
 
 @weather.action('root')
 def forecast(params):
-    data = None
 
     location = get_location(params.id)
     if location.id:
         try:
             lang = weather.gismeteo_lang()
             data = _location_forecast(lang, location.id)
-        except (GismeteoError) as e:
+        except (GismeteoError, WebClientError) as e:
             weather.notify_error(e)
             clear()
         else:
@@ -384,8 +377,8 @@ def location(params):
         try:
             lang = weather.gismeteo_lang()
             search_result = Gismeteo(lang).cities_search(keyword)
-        except (GismeteoError) as e:
-            weather.notify_error(e)
+        except (GismeteoError, WebClientError) as e:
+            weather.notify_error(e, True)
         else:
             for s_location in search_result:
                 location = Location(s_location)
@@ -396,20 +389,23 @@ def location(params):
                 locations.append(item)
                 labels.append(location.label)
 
-        if locations:
-            selected = weather.dialog_select(xbmc.getLocalizedString(396), labels)
-            if selected != -1:
-                selected_location = locations[selected]
-                weather.set_setting('Location{0}'.format(params.id), selected_location['name'])
-                weather.set_setting('Location{0}ID'.format(params.id), selected_location['id'])
-        else:
-            weather.dialog_ok(weather.name, xbmc.getLocalizedString(284))
+            if locations:
+                selected = weather.dialog_select(xbmc.getLocalizedString(396), labels)
+                if selected != -1:
+                    selected_location = locations[selected]
+                    weather.set_setting('Location{0}'.format(params.id), selected_location['name'])
+                    weather.set_setting('Location{0}ID'.format(params.id), selected_location['id'])
+            else:
+                weather.dialog_ok(weather.name, xbmc.getLocalizedString(284))
 
 
 @weather.mem_cached(30)
 def _location_forecast(lang, _id):
     return Gismeteo(lang).forecast(_id)
 
+@weather.mem_cached(10)
+def _ip_locations(lang):
+    return Gismeteo(lang).cities_ip()
 
 def get_location(loc_id):
 
@@ -419,8 +415,8 @@ def get_location(loc_id):
       and use_current_location:
         try:
             lang = weather.gismeteo_lang()
-            ip_locations = Gismeteo(lang).cities_ip()
-        except (GismeteoError) as e:
+            ip_locations = _ip_locations(lang)
+        except (GismeteoError, WebClientError) as e:
             weather.notify_error(e)
         else:
             for ip_location in ip_locations:

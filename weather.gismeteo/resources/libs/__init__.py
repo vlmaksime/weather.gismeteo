@@ -7,9 +7,9 @@ import xbmc
 
 from .gismeteo import GismeteoError, GismeteoClient
 from .simpleweather import Weather as SW_Weather
-from .simpleweather import WeatherProperties, Addon
+from .simpleweather import WeatherProperties, Addon, WebClient, WebClientError
 
-__all__ = ['GismeteoError', 'Gismeteo',
+__all__ = ['GismeteoError', 'Gismeteo', 'WebClientError',
            'Location', 'Weather']
 
 
@@ -20,11 +20,12 @@ class Gismeteo(GismeteoClient):
         super(Gismeteo, self).__init__(*args, **kwargs)
 
         addon = simpleweather.Addon()
-        if addon.kodi_major_version() >= '17':
-            headers = {'User-Agent': xbmc.getUserAgent(),
-                       }
 
-            self._client.headers.update(headers)
+        headers = self._client.headers
+        if addon.kodi_major_version() >= '17':
+            headers['User-Agent'] = xbmc.getUserAgent()
+
+        self._client = WebClient(headers)
 
 
 class Weather(SW_Weather, WeatherProperties):
