@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="weather.gismeteo" version="0.3.4~beta2" name="Gismeteo" provider-name="vl.maksime">
-    <requires>
-        <import addon="xbmc.python" version="2.19.0"/>
-        <import addon="script.module.future" version="0.16.0.4"/>
-        <import addon="script.module.simpleplugin3" version="3.0.0~beta6"/>
-    </requires>
-    <extension point="xbmc.python.weather" library="default.py"/>
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">Gismeteo Weather Forecast. Real time weather and detailed forecast all round the world</summary>
-        <summary lang="ru_RU">Прогноз погоды от ведущего погодного сервиса Gismeteo</summary>
-        <description lang="en_GB">The weather is provided solely for personal non-commercial use</description>
-        <description lang="ru_RU">Погода предоставлена исключительно для личного некоммерческого использования</description>
-        <disclaimer lang="en_GB">The weather forecast has been prepared by MapMakers Group Ltd</disclaimer>
-        <disclaimer lang="ru_RU">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
-        <language></language>
-        <platform>all</platform>
-        <license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
-        <forum>http://xbmc.ru/forum/showthread.php?t=14692</forum>
-        <website>https://www.gismeteo.ru/</website>
-        <email>vl.maksime@gmail.com</email>
-        <source>https://github.com/vlmaksime/weather.gismeteo</source>
-        <news>v0.3.3 (2018-04-07)[CR]- Исправлена ошибка разбора данных XML[CR][CR]v0.3.2 (2018-02-18)[CR]- Исправлена ошибка совместимости с Android и LibreELEC</news>
-        <assets>
-            <icon>icon.png</icon>
-        </assets>
-    </extension>
+<addon id="weather.gismeteo" version="0.4.1" name="Gismeteo" provider-name="vl.maksime">
+	<requires>
+		<import addon="xbmc.python" version="2.19.0"/>
+		<import addon="script.module.future" version="0.16.0.4"/>
+		<import addon="script.module.simpleplugin3" version="3.0.1"/>
+		<import addon="script.module.requests" version="2.15.1"/>
+	</requires>
+	<extension point="xbmc.python.weather" library="default.py"/>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Gismeteo Weather Forecast. Real time weather and detailed forecast all round the world</summary>
+		<summary lang="ru">Прогноз погоды от ведущего погодного сервиса Gismeteo</summary>
+		<summary lang="sp">Pronóstico del tiempo Gismeteo. Clima en tiempo real y pronóstico detallado en todo el mundo</summary>
+		<description lang="en">The weather is provided solely for personal non-commercial use</description>
+		<description lang="ru">Погода предоставлена исключительно для личного некоммерческого использования</description>
+		<description lang="sp">El clima se proporciona únicamente para su uso personal y no comercial</description>
+		<disclaimer lang="en">The weather forecast has been prepared by MapMakers Group Ltd</disclaimer>
+		<disclaimer lang="ru">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
+		<disclaimer lang="sp">El pronóstico del tiempo ha sido preparado por MapMakers Group Ltd</disclaimer>
+		<language></language>
+		<platform>all</platform>
+		<license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
+		<forum>http://xbmc.ru/forum/showthread.php?t=14692</forum>
+		<website>https://www.gismeteo.ru/</website>
+		<email>vl.maksime@gmail.com</email>
+		<source>https://github.com/vlmaksime/weather.gismeteo</source>
+		<news>v0.4.1 (2020-05-03)[CR]- Изменен механизм кэширования данных[CR]- исправлены выявленные ошибки</news>
+		<assets>
+			<icon>icon.png</icon>
+		</assets>
+	</extension>
 </addon>
