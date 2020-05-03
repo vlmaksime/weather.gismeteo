@@ -2,13 +2,10 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from future.utils import PY26, iteritems, python_2_unicode_compatible
+from future.utils import PY26
 
-import os
 import time
 import calendar
-import _strptime
-
 import requests
 
 import xml.etree.cElementTree as etree
@@ -25,7 +22,6 @@ class GismeteoError(Exception):
     pass
 
 
-@python_2_unicode_compatible
 class GismeteoClient(object):
 
     _base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
@@ -42,11 +38,8 @@ class GismeteoClient(object):
 
         self._client.close()
 
-    def __str__(self):
-
-        return '<GismeteoClient>'.format(self._plf)
-
-    def _extract_xml(self, r):
+    @staticmethod
+    def _extract_xml(r):
 
         try:
             x = etree.fromstring(r.content)
@@ -62,7 +55,8 @@ class GismeteoClient(object):
         r = self._client.get(url, params=params, *args, **kwargs)
         return r
 
-    def _get_locations_list(self, root):
+    @staticmethod
+    def _get_locations_list(root):
 
         result = []
         for item in root:
@@ -80,7 +74,8 @@ class GismeteoClient(object):
 
         return result
 
-    def _get_date(self, source, tzone):
+    @staticmethod
+    def _get_date(source, tzone):
 
         if isinstance(source, float):
             local_stamp = source
@@ -159,7 +154,7 @@ class GismeteoClient(object):
 
     def _get_days_forecast(self, xml_location):
         tzone = int(xml_location.attrib['tzone'])
-        
+
         result = []
         for xml_day in xml_location.findall('day'):
 
@@ -208,7 +203,7 @@ class GismeteoClient(object):
         for xml_forecast in xml_day.findall('forecast'):
             item = self._get_item_forecast(xml_forecast, tzone)
             result.append(item)
-            
+
         return result
 
     def cities_search(self, keyword):

@@ -8,7 +8,6 @@ import os
 import time
 
 import xbmc
-import xbmcgui
 
 from resources.libs import Gismeteo, GismeteoError, Location, Weather
 
@@ -408,9 +407,9 @@ def location(params):
 
 
 @weather.mem_cached(30)
-def _location_forecast(lang, id):
-    return Gismeteo(lang).forecast(id)
-    
+def _location_forecast(lang, _id):
+    return Gismeteo(lang).forecast(_id)
+
 
 def get_location(loc_id):
 
@@ -428,10 +427,10 @@ def get_location(loc_id):
                 return Location(ip_location)
     else:
         int_loc_id = int(loc_id)
-    
+
         if use_current_location:
             int_loc_id -= 1
-        
+
         location_id = weather.get_setting('Location{0}ID'.format(int_loc_id))
 
         if not location_id \
@@ -454,7 +453,7 @@ def get_location(loc_id):
 if __name__ == '__main__':
 
     description = weather.prop_description()
-    
+
     description['Forecast.IsFetched'] = 'true'
     description['Current.IsFetched'] = 'true'
     description['Today.IsFetched'] = 'true'

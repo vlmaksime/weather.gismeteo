@@ -47,7 +47,7 @@ class PluginActionsTestCase(unittest.TestCase):
     def test_01_location():
 
         xbmc.Keyboard.strings.append('London')
-        
+
         run_script()
 
 

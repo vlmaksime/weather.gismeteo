@@ -130,7 +130,7 @@ class WeatherProperties(object):
         return {  # standard properties
                 'WeatherProvider': '',
                 'WeatherProviderLogo': '',
-                
+
                  # extenden properties
                 'Forecast.IsFetched': '',
                 'Current.IsFetched': '',
@@ -160,8 +160,8 @@ class Helper():
         kbd.doModal()
         if kbd.isConfirmed():
             return kbd.getText()
-        
-        return ''  
+
+        return ''
 
     @staticmethod
     def wind_directions():
@@ -246,7 +246,7 @@ class Dialogs():
         heading = ''
         message = '{0}'.format(error)
         self.log_error(message)
-    
+
         if show_dialog:
             self.dialog_ok(message)
         else:
@@ -282,7 +282,7 @@ class Dialogs():
 
     def dialog_progress_create(self, heading, line1="", line2="", line3=""):
         progress = xbmcgui.DialogProgress()
-        
+
         if self.kodi_major_version() >= '19':
             progress.create(heading, self._join_strings(line1, line2, line3))
         else:
@@ -291,7 +291,7 @@ class Dialogs():
         return progress
 
     def dialog_progress_update(self, progress, percent, line1="", line2="", line3=""):
-        
+
         if self.kodi_major_version() >= '19':
             progress.update(percent, self._join_strings(line1, line2, line3))
         else:
@@ -299,8 +299,9 @@ class Dialogs():
 
         return progress
 
-    def dialog_select(self, heading, list, **kwargs):
-        return xbmcgui.Dialog().select(heading, list, **kwargs)
+    @staticmethod
+    def dialog_select(heading, _list, **kwargs):
+        return xbmcgui.Dialog().select(heading, _list, **kwargs)
 
     @staticmethod
     def _join_strings(line1, line2="", line3=""):
@@ -309,7 +310,7 @@ class Dialogs():
         if line1: lines.append(line1)
         if line2: lines.append(line2)
         if line3: lines.append(line3)
-        
+
         return '[CR]'.join(lines)
 
 
@@ -370,10 +371,10 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
             weather_icon = py2_decode(xbmc.translatePath('%s.png'))
 
         return weather_icon
-    
+
     def SPEED(self, mps):
         SPEEDUNIT = self.speedunit
-        
+
         if SPEEDUNIT == 'km/h':
             speed = mps * 3.6
         elif SPEEDUNIT == 'm/min':
@@ -398,15 +399,15 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
             speed = mps * 6012.886
         else:
             speed = mps
-    
+
         if isinstance(speed, str):
             return speed
         else:
             return '{0}'.format(int(round(speed)))
-    
+
     def TEMP(self, deg):
         TEMPUNIT = self.tempunit
-        
+
         if TEMPUNIT == '°F':
             temp = deg * 1.8 + 32
         elif TEMPUNIT == 'K':
@@ -425,7 +426,7 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
             temp = deg
 
         return '{0}'.format(int(round(temp)))
-    
+
     @staticmethod
     def KPHTOBFT(spd):
         if (spd < 1.0):
@@ -457,7 +458,7 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
         else:
             bft = ''
         return bft
-    
+
     #### thanks to FrostBox @ http://forum.kodi.tv/showthread.php?tid=114637&pid=937168#pid937168
     def DEW_POINT(self, Tc=0, RH=93, ext=True, minRH=(0, 0.075)[ 0 ]):
         Es = 6.11 * 10.0 ** (7.5 * Tc / (237.7 + Tc))
@@ -471,7 +472,7 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
             return self.TEMP(DewPoint)
         else:
             return '{0}'.format(int(round(DewPoint)))
-    
+
     def PRESSURE(self, mmHg):
         if self.PRESUNIT == 'mmHg':
             return '%.0f' % (float(mmHg))
@@ -479,7 +480,7 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
             return '%.0f' % (float(mmHg * 1.3332239))
         elif self.PRESUNIT == 'inHg':
             return '%.2f' % (float(mmHg * 0.0393701))
-    
+
     def PRECIPITATION(self, mm):
         if self.PRECIPUNIT == 'mm':
             return '%.1f' % (float(mm))

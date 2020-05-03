@@ -18,7 +18,7 @@ class Gismeteo(GismeteoClient):
     def __init__(self, *args, **kwargs):
 
         super(Gismeteo, self).__init__(*args, **kwargs)
-        
+
         addon = simpleweather.Addon()
         if addon.kodi_major_version() >= '17':
             headers = {'User-Agent': xbmc.getUserAgent(),
@@ -28,11 +28,11 @@ class Gismeteo(GismeteoClient):
 
 
 class Weather(SW_Weather, WeatherProperties):
-    
+
     def __init__(self, *args, **kwargs):
-    
+
         super(Weather, self).__init__(*args, **kwargs)
-    
+
         self.TEMPUNIT = self.tempunit
         self.SPEEDUNIT = self.speedunit
         self.DATEFORMAT = self.date_format
@@ -72,13 +72,13 @@ class Weather(SW_Weather, WeatherProperties):
             lang = 'de'
         elif lang_id == 8:
             lang = 'pl'
-    
+
         return lang
-    
+
     def get_weather_code(self, item):
-    
+
         return self.WEATHER_CODES.get(item['icon'], 'na')
-    
+
     def get_wind_direction(self, value):
         wind_direction_code = self.WIND_DIRECTIONS.get(value)
 
@@ -91,7 +91,7 @@ class Weather(SW_Weather, WeatherProperties):
 
     def get_time(self, date):
         date_time = self._get_timestamp(date)
-    
+
         if self.TIMEFORMAT != '/':
             local_time = time.strftime('%I:%M%p', date_time)
         else:
@@ -101,7 +101,7 @@ class Weather(SW_Weather, WeatherProperties):
 
     def convert_date(self, date):
         date_time = self._get_timestamp(date)
-    
+
         if self.DATEFORMAT[1] == 'd' or self.DATEFORMAT[0] == 'D':
             localdate = time.strftime('%d-%m-%Y', date_time)
         elif self.DATEFORMAT[1] == 'm' or self.DATEFORMAT[0] == 'M':
@@ -117,10 +117,10 @@ class Weather(SW_Weather, WeatherProperties):
 
     def is_weekend(self, day):
         return (self.get_weekday(day['date'], 'x') in self.WEEKENDS)
-    
+
     def get_weekday(self, date, form):
         date_time = self._get_timestamp(date)
-    
+
         weekday = time.strftime('%w', date_time)
         if form == 's':
             return xbmc.getLocalizedString(self.WEEK_DAY_SHORT[weekday])
@@ -128,10 +128,10 @@ class Weather(SW_Weather, WeatherProperties):
             return xbmc.getLocalizedString(self.WEEK_DAY_LONG[weekday])
         else:
             return int(weekday)
-    
+
     def get_month(self, date, form):
         date_time = self._get_timestamp(date)
-    
+
         month = time.strftime('%m', date_time)
         day = time.strftime('%d', date_time)
         if form == 'ds':
@@ -143,22 +143,22 @@ class Weather(SW_Weather, WeatherProperties):
         elif form == 'ml':
             label = xbmc.getLocalizedString(self.MONTH_NAME_LONG[month]) + ' ' + day
         return label
-    
+
     def _weekends(self):
         weekend = self.get_setting('Weekend')
-    
+
         if weekend == 2:
             weekends = [4, 5]
         elif weekend == 1:
             weekends = [5, 6]
         else:
             weekends = [6, 0]
-    
+
         return weekends
 
     @staticmethod
     def _lang():
-     
+
         return {  # kodi lang name          # gismeteo code
                 'afrikaans'             : '',
                 'albanian'              : '',
@@ -367,16 +367,16 @@ class Weather(SW_Weather, WeatherProperties):
             stamp = time.localtime(date['unix'])
         else:
             stamp = time.gmtime(date['unix'] + date['offset'] * 60)
-    
+
         return stamp
 
 
 class Location(object):
-    
+
     def __init__(self, data=None):
-        
+
         self._data = data or {}
-        
+
     @property
     def name(self):
 
@@ -388,25 +388,25 @@ class Location(object):
             location_name = '{0} {1}'.format(addon.gettext('a/p'), location_name)
 
         return location_name
-    
+
     @property
     def id(self):
 
         return self._data.get('id', '')
-        
+
     @property
     def district(self):
-        
+
         return self._data.get('district', '')
-        
+
     @property
     def country(self):
-        
+
         return self._data.get('country', '')
-    
+
     @property
     def label(self):
-        
+
         if self.district:
             return '{0} ({1}, {2})'.format(self.name, self.district, self.country)
         else:
