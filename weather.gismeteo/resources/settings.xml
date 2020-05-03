@@ -22,8 +22,6 @@
         <setting id="PrecipUnit" label="32135" type="enum" lvalues="32430|32431" default="0"/>
     </category>
     <category label="32103">
-        <setting label="32136" type="action" action="RunScript($ID,action=clear_cache)"/>
-        <setting type="sep"/>
         <setting id="Location1" label="32111" type="text" default=""/>
         <setting id="Location1ID" label="32116" type="text" subsetting="true" default=""/>
         <setting type="sep"/>

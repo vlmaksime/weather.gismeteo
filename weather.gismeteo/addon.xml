@@ -3,7 +3,8 @@
     <requires>
         <import addon="xbmc.python" version="2.19.0"/>
         <import addon="script.module.future" version="0.16.0.4"/>
-        <import addon="script.module.simpleplugin3" version="3.0.0~beta6"/>
+        <import addon="script.module.simpleplugin3" version="3.0.1"/>
+        <import addon="script.module.requests" version="2.15.1"/>
     </requires>
     <extension point="xbmc.python.weather" library="default.py"/>
     <extension point="xbmc.addon.metadata">
