@@ -9,15 +9,35 @@ python:
   - "2.6"
   - "2.7"
   - "3.6"
+env:
+  global:
+    - ADDON_ID=weather.gismeteo
 before_install:
   - export PYTHONIOENCODING=UTF-8
 
 install:
-  - pip install codecov codacy-coverage mock future
-  - pip install https://github.com/romanvm/script.module.simpleplugin/archive/develop.zip
+  - pip install -q codecov codacy-coverage mock future requests
+  - pip install -q git+https://github.com/romanvm/script.module.simpleplugin.git
+  - pip install -q https://github.com/vlmaksime/Kodistubs/archive/develop.zip
 script:
   - coverage run tests.py
 after_success:
   - codecov
   - coverage xml
   - python-codacy-coverage -r coverage.xml
+before_deploy:
+  - pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
+  - submit-addon -s -z $ADDON_ID
+  - export RELEASE_ZIP=$(ls *.zip)
+deploy:
+  # Publish an installable ZIP to GitHub Releases
+  - provider: releases
+    api_key: $GH_TOKEN
+    file_glob: true
+    file: $RELEASE_ZIP
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+notifications:
+  email: false
