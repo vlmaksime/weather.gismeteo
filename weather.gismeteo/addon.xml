@@ -10,10 +10,13 @@
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Gismeteo Weather Forecast. Real time weather and detailed forecast all round the world</summary>
 		<summary lang="ru">Прогноз погоды от ведущего погодного сервиса Gismeteo</summary>
+		<summary lang="sp">Pronóstico del tiempo Gismeteo. Clima en tiempo real y pronóstico detallado en todo el mundo</summary>
 		<description lang="en">The weather is provided solely for personal non-commercial use</description>
 		<description lang="ru">Погода предоставлена исключительно для личного некоммерческого использования</description>
+		<description lang="sp">El clima se proporciona únicamente para su uso personal y no comercial</description>
 		<disclaimer lang="en">The weather forecast has been prepared by MapMakers Group Ltd</disclaimer>
 		<disclaimer lang="ru">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
+		<disclaimer lang="sp">El pronóstico del tiempo ha sido preparado por MapMakers Group Ltd</disclaimer>
 		<language></language>
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
