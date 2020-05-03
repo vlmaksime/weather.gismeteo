@@ -2,7 +2,7 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from future.utils import iteritems, python_2_unicode_compatible
+from future.utils import PY26, iteritems, python_2_unicode_compatible
 
 import os
 import time
@@ -35,6 +35,8 @@ class GismeteoClient(object):
         self._lang = lang
 
         self._client = requests.Session()
+        if PY26:
+            self._client.verify = False
 
     def __del__(self):
 
