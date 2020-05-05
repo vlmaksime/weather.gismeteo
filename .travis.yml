@@ -16,15 +16,15 @@ before_install:
   - export PYTHONIOENCODING=UTF-8
 
 install:
-  - pip install -q codecov codacy-coverage mock future requests
+  - pip install -q codecov mock future requests
   - pip install -q git+https://github.com/romanvm/script.module.simpleplugin.git
   - pip install -q https://github.com/vlmaksime/Kodistubs/archive/develop.zip
 script:
   - coverage run tests.py
 after_success:
   - codecov
-  - coverage xml
-  - python-codacy-coverage -r coverage.xml
+  - coverage xml -o cobertura.xml
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh)
 before_deploy:
   - pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
   - submit-addon -s -z $ADDON_ID
