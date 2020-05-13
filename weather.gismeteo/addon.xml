@@ -17,7 +17,7 @@
 		<disclaimer lang="ru_RU">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
 		<disclaimer lang="es_ES">El pronóstico del tiempo ha sido preparado por MapMakers Group Ltd</disclaimer>
 		<platform>all</platform>
-		<license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
+		<license>GPL-3.0-only</license>
 		<forum>https://forum.kodi.tv/showthread.php?tid=323624</forum>
 		<website>https://www.gismeteo.ru/</website>
 		<email>vl.maksime@gmail.com</email>

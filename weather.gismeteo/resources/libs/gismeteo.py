@@ -2,7 +2,6 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from future.utils import PY26
 
 import time
 import calendar
@@ -31,8 +30,7 @@ class GismeteoClient(object):
         self._lang = lang
 
         self._client = requests.Session()
-        if PY26:
-            self._client.verify = False
+        self._client.verify = False
 
     def __del__(self):
 
