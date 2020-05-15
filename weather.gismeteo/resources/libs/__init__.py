@@ -25,10 +25,7 @@ class Gismeteo(GismeteoClient):
         if addon.kodi_major_version() >= '17':
             headers['User-Agent'] = xbmc.getUserAgent()
 
-        new_client = WebClient(headers)
-        new_client.verify = self._client.verify
-        
-        self._client = new_client
+        self._client = WebClient(headers)
 
 
 class Weather(SW_Weather, WeatherProperties):

@@ -23,14 +23,13 @@ class GismeteoError(Exception):
 
 class GismeteoClient(object):
 
-    _base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
+    _base_url = 'https://services.gismeteo.net/inform-service/inf_chrome'
 
     def __init__(self, lang='en'):
 
         self._lang = lang
 
         self._client = requests.Session()
-        self._client.verify = False
 
     def __del__(self):
 
