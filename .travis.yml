@@ -1,9 +1,4 @@
 dist: trusty
-branches:
-  only:
-    - develop
-    - master
-    - kodi-release
 language: python
 python:
   - "2.6"
@@ -12,9 +7,7 @@ python:
 env:
   global:
     - ADDON_ID=weather.gismeteo
-before_install:
-  - export PYTHONIOENCODING=UTF-8
-
+    - PYTHONIOENCODING=UTF-8
 install:
   - pip install -q codecov mock future requests
   - pip install -q git+https://github.com/romanvm/script.module.simpleplugin.git
@@ -38,6 +31,7 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
+      python: "3.6"
       tags: true
 notifications:
   email: false
