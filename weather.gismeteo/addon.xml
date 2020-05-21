@@ -17,14 +17,13 @@
 		<disclaimer lang="en">The weather forecast has been prepared by MapMakers Group Ltd</disclaimer>
 		<disclaimer lang="ru">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
 		<disclaimer lang="sp">El pronóstico del tiempo ha sido preparado por MapMakers Group Ltd</disclaimer>
-		<language></language>
 		<platform>all</platform>
 		<license>GPL-3.0-only</license>
 		<forum>http://xbmc.ru/forum/showthread.php?t=14692</forum>
 		<website>https://www.gismeteo.ru/</website>
 		<email>vl.maksime@gmail.com</email>
 		<source>https://github.com/vlmaksime/weather.gismeteo</source>
-		<news>v0.4.2 (2020-05-13)[CR]- Изменен механизм кэширования данных[CR]- исправлены выявленные ошибки</news>
+		<news>v0.4.2 (2020-05-21)[CR]- исправлены выявленные ошибки[CR][CR]v0.4.1 (2020-05-13)[CR]- Изменен механизм кэширования данных[CR]- исправлены выявленные ошибки</news>
 		<assets>
 			<icon>icon.png</icon>
 		</assets>

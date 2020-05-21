@@ -465,12 +465,13 @@ def _call_method(func, params=None):
     while not monitor.abortRequested():
         try:
             return func(**params)
-        except (GismeteoError, WebClientError) as e:
+        except (GismeteoError, WebClientError, ImportError) as e:
             if retry >= 10:
                 raise e
         finally:
             retry += 1
             monitor.waitForAbort(1)
+
 
 if __name__ == '__main__':
 
