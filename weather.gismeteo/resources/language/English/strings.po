@@ -152,6 +152,18 @@ msgctxt "#32208"
 msgid "Polish"
 msgstr ""
 
+msgctxt "#32220"
+msgid "Gismeteo icons"
+msgstr ""
+
+msgctxt "#32221"
+msgid "Use Gismeteo icons"
+msgstr ""
+
+msgctxt "#32222"
+msgid "Install icon package"
+msgstr ""
+
 msgctxt "#32299"
 msgid "Language"
 msgstr ""
