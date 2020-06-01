@@ -20,7 +20,7 @@ after_success:
   - bash <(curl -Ls https://coverage.codacy.com/get.sh)
 before_deploy:
   - pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
-  - submit-addon -s -z $ADDON_ID
+  - submit-addon -s -z -m $ADDON_ID
   - export RELEASE_ZIP=$(ls *.zip)
 deploy:
   # Publish an installable ZIP to GitHub Releases
