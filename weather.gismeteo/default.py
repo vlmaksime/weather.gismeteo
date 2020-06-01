@@ -67,6 +67,10 @@ def set_item_info(props, item, item_type, icon='%s.png', day_temp=None):
     if 'FanartCode' in keys:
         props['FanartCode'] = weather_code
 
+    if 'ProviderIcon' in keys\
+        and weather.use_provider_icon:
+        props['ProviderIcon'] = 'resource://resource.images.weatherprovidericons.gismeteo/{0}.png'.format(item['icon'])
+
     # Wind
 
     wind = item['wind']
@@ -401,11 +405,22 @@ def location(params):
 
 @weather.mem_cached(30)
 def _location_forecast(lang, _id):
-    return Gismeteo(lang).forecast(_id)
+
+    gismeteo = Gismeteo(lang)
+
+    params = {'city_id': _id,
+              }
+
+    return _call_method(gismeteo.forecast, params)
+
+
 
 @weather.mem_cached(10)
 def _ip_locations(lang):
-    return Gismeteo(lang).cities_ip()
+
+    gismeteo = Gismeteo(lang)
+
+    return _call_method(gismeteo.cities_ip)
 
 def get_location(loc_id):
 
@@ -444,6 +459,22 @@ def get_location(loc_id):
         return Location(data)
 
     return Location()
+
+
+def _call_method(func, params=None):
+    params = params or {}
+
+    retry = 0
+    monitor = xbmc.Monitor()
+    while not monitor.abortRequested():
+        try:
+            return func(**params)
+        except (GismeteoError, WebClientError, ImportError) as e:
+            if retry >= 10:
+                raise e
+        finally:
+            retry += 1
+            monitor.waitForAbort(1)
 
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import unicode_literals
-from future.utils import PY26
 
 import time
 import calendar
@@ -24,15 +23,13 @@ class GismeteoError(Exception):
 
 class GismeteoClient(object):
 
-    _base_url = 'https://services.gismeteo.ru/inform-service/inf_chrome'
+    _base_url = 'https://services.gismeteo.net/inform-service/inf_chrome'
 
     def __init__(self, lang='en'):
 
         self._lang = lang
 
         self._client = requests.Session()
-        if PY26:
-            self._client.verify = False
 
     def __del__(self):
 

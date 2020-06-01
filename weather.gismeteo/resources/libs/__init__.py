@@ -25,10 +25,7 @@ class Gismeteo(GismeteoClient):
         if addon.kodi_major_version() >= '17':
             headers['User-Agent'] = xbmc.getUserAgent()
 
-        new_client = WebClient(headers)
-        new_client.verify = self._client.verify
-        
-        self._client = new_client
+        self._client = WebClient(headers)
 
 
 class Weather(SW_Weather, WeatherProperties):
@@ -54,6 +51,9 @@ class Weather(SW_Weather, WeatherProperties):
         self.WEEK_DAY_LONG = self.week_day_long()
         self.WEEK_DAY_SHORT = self.week_day_short()
         self.KODILANGUAGE = xbmc.getLanguage().lower()
+
+        iconpack_installed = xbmc.getCondVisibility('System.HasAddon(resource.images.weatherprovidericons.gismeteo)')
+        self.use_provider_icon = self.get_setting('UseProviderIcons') and iconpack_installed
 
     def gismeteo_lang(self):
 
@@ -396,7 +396,7 @@ class Location(object):
     @property
     def id(self):
 
-        return self._data.get('id', '')
+        return '{0}'.format(self._data.get('id', ''))
 
     @property
     def district(self):
