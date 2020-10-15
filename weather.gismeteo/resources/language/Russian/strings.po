@@ -164,6 +164,10 @@ msgctxt "#32222"
 msgid "Install icon package"
 msgstr "Установить пакет иконок"
 
+msgctxt "#32223"
+msgid "Requires Kodi 16+ and skin support"
+msgstr "Требуется Kodi 16+ и поддержка скина"
+
 msgctxt "#32299"
 msgid "Language"
 msgstr "Язык"

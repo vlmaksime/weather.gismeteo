@@ -164,6 +164,10 @@ msgctxt "#32222"
 msgid "Install icon package"
 msgstr ""
 
+msgctxt "#32223"
+msgid "Requires Kodi 16+ and skin support"
+msgstr ""
+
 msgctxt "#32299"
 msgid "Language"
 msgstr ""
