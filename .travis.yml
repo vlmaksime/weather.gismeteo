@@ -10,9 +10,7 @@ env:
     - BRANCH=krypton
     - PYTHONIOENCODING=UTF-8
 install:
-  - pip install -q codecov mock future requests
-  - pip install -q git+https://github.com/romanvm/script.module.simpleplugin.git
-  - pip install -q https://github.com/vlmaksime/Kodistubs/archive/develop.zip
+  - pip install -q -r requirements.txt
 script:
   - coverage run tests.py
 after_success:
@@ -21,14 +19,13 @@ after_success:
   - bash <(curl -Ls https://coverage.codacy.com/get.sh)
 before_deploy:
   - pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
-  - submit-addon -s -z $ADDON_ID
-  - export RELEASE_ZIP=$(ls *.zip)
+  - submit-addon -s -z -m $ADDON_ID
 deploy:
   # Publish an installable ZIP to GitHub Releases
   - provider: releases
     api_key: $GH_TOKEN
     file_glob: true
-    file: $RELEASE_ZIP
+    file: ./*.zip
     skip_cleanup: true
     on:
       branch: master
