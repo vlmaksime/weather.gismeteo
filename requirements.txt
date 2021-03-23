@@ -1,0 +1,6 @@
+future
+requests
+codecov
+mock
+git+https://github.com/romanvm/script.module.simpleplugin.git
+https://github.com/vlmaksime/Kodistubs/archive/develop.zip
