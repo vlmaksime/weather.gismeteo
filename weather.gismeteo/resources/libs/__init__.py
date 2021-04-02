@@ -76,6 +76,12 @@ class Weather(SW_Weather, WeatherProperties):
             lang = 'de'
         elif lang_id == 8:
             lang = 'pl'
+        elif lang_id == 9:
+            lang = 'sp'
+        elif lang_id == 10:
+            lang = 'fr'
+        elif lang_id == 11:
+            lang = 'sv'
 
         return lang
 
@@ -190,7 +196,7 @@ class Weather(SW_Weather, WeatherProperties):
                 'estonian'              : '',
                 'faroese'               : '',
                 'finnish'               : '',
-                'french'                : '',
+                'french'                : 'fr',
                 'galician'              : '',
                 'german'                : 'de',
                 'greek'                 : '',
@@ -225,10 +231,10 @@ class Weather(SW_Weather, WeatherProperties):
                 'sinhala'               : '',
                 'slovak'                : '',
                 'slovenian'             : '',
-                'spanish'               : '',
-                'spanish (argentina)'   : '',
-                'spanish (mexico)'      : '',
-                'swedish'               : '',
+                'spanish'               : 'sp',
+                'spanish (argentina)'   : 'sp',
+                'spanish (mexico)'      : 'sp',
+                'swedish'               : 'sv',
                 'tajik'                 : '',
                 'tamil (india)'         : '',
                 'telugu'                : '',
