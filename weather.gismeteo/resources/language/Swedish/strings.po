@@ -152,18 +152,6 @@ msgctxt "#32208"
 msgid "Polish"
 msgstr "Polska"
 
-msgctxt "#32209"
-msgid "Spanish"
-msgstr "Spanska"
-
-msgctxt "#32210"
-msgid "French"
-msgstr "Franska"
-
-msgctxt "#32211"
-msgid "Swedish"
-msgstr "Svenska"
-
 msgctxt "#32220"
 msgid "Gismeteo icons"
 msgstr "Gismeteo-ikoner"
