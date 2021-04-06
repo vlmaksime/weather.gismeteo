@@ -43,7 +43,7 @@ class PluginActionsTestCase(unittest.TestCase):
         print("Running test: {0}".format(self.id().split('.')[-1]))
 
     @staticmethod
-    @mock.patch('resources.libs.simpleweather.sys.argv', ['plugin://{0}/'.format(addon_name), 'action=location&id=1'])
+    @mock.patch('resources.libs.simpleweather.simpleweather.sys.argv', ['plugin://{0}/'.format(addon_name), 'action=location&id=1'])
     def test_01_location():
 
         xbmc.Keyboard.strings.append('London')
@@ -54,12 +54,12 @@ class PluginActionsTestCase(unittest.TestCase):
     @staticmethod
     def test_02_forecast():
 
-        with mock.patch('resources.libs.simpleweather.sys') as mock_sys:
+        with mock.patch('resources.libs.simpleweather.simpleweather.sys') as mock_sys:
             mock_sys.argv = ['plugin://{0}/'.format(addon_name), '1']
 
             run_script()
 
-        with mock.patch('resources.libs.simpleweather.sys') as mock_sys:
+        with mock.patch('resources.libs.simpleweather.simpleweather.sys') as mock_sys:
             mock_sys.argv = ['plugin://{0}/'.format(addon_name), '2']
 
             run_script()
