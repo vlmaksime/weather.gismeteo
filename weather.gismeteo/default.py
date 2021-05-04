@@ -9,6 +9,12 @@ import time
 
 import xbmc
 
+try:  # Kodi v19 or newer
+    from xbmcvfs import translatePath
+except ImportError:  # Kodi v18 and older
+    # pylint: disable=ungrouped-imports
+    from xbmc import translatePath
+
 from resources.libs import Gismeteo, GismeteoError, Location, Weather, WebClientError
 
 weather = Weather()
@@ -490,7 +496,7 @@ if __name__ == '__main__':
     description['Hourly.IsFetched'] = 'true'
 
     description['WeatherProvider'] = weather.name
-    description['WeatherProviderLogo'] = xbmc.translatePath(os.path.join(weather.path, 'resources', 'media', 'banner.png'))
+    description['WeatherProviderLogo'] = translatePath(os.path.join(weather.path, 'resources', 'media', 'banner.png'))
 
     weather.set_properties(description)
 

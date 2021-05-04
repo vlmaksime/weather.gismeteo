@@ -14,6 +14,12 @@ from simpleplugin import py2_encode, py2_decode
 
 from .dialogs import Dialogs
 
+try:  # Kodi v19 or newer
+    from xbmcvfs import translatePath
+except ImportError:  # Kodi v18 and older
+    # pylint: disable=ungrouped-imports
+    from xbmc import translatePath
+
 if PY3:
     basestring = str
 
@@ -319,9 +325,9 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
         """
         major_version = xbmc.getInfoLabel('System.BuildVersion')[:2]
         if major_version < '16':
-            weather_icon = py2_decode(xbmc.translatePath('special://temp/weather/%s.png'))
+            weather_icon = py2_decode(translatePath('special://temp/weather/%s.png'))
         else:
-            weather_icon = py2_decode(xbmc.translatePath('%s.png'))
+            weather_icon = py2_decode(translatePath('%s.png'))
 
         return weather_icon
 
