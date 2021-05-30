@@ -10,7 +10,7 @@ import simpleplugin
 import xbmc
 import xbmcgui
 from future.utils import PY3, python_2_unicode_compatible
-from simpleplugin import py2_encode, py2_decode
+from simpleplugin import py2_encode, py2_decode, translate_path
 
 from .dialogs import Dialogs
 
@@ -319,9 +319,9 @@ class Addon(simpleplugin.Addon, Helper, Dialogs):
         """
         major_version = xbmc.getInfoLabel('System.BuildVersion')[:2]
         if major_version < '16':
-            weather_icon = py2_decode(xbmc.translatePath('special://temp/weather/%s.png'))
+            weather_icon = py2_decode(translate_path('special://temp/weather/%s.png'))
         else:
-            weather_icon = py2_decode(xbmc.translatePath('%s.png'))
+            weather_icon = py2_decode(translate_path('%s.png'))
 
         return weather_icon
 
