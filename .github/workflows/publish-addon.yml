@@ -1,0 +1,33 @@
+name: Publish addon
+
+on:
+  push:
+    branches: [ kodi-release ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install addon checker
+      run: |
+        pip install -q kodi-addon-checker
+    - name: Check with addon-checker
+      run: |
+        kodi-addon-checker --branch krypton
+    - name: Install addon submitter
+      run: |
+        pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
+    - name: Submit addon
+      run: |
+        submit-addon -r repo-scripts -b krypton -m -s --pull-request weather.gismeteo
+      env:
+        GH_USERNAME: vlmaksime
+        GH_TOKEN: ${{ secrets.gh_token }}
+        EMAIL: vl.maksime@gmail.com
