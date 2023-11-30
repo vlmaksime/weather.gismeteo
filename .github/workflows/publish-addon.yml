@@ -5,29 +5,22 @@ on:
     branches: [ kodi-release ]
 
 jobs:
-  build:
-
+  kodi-addon-submitter:
     runs-on: ubuntu-latest
-
+    name: Kodi addon submitter
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install addon checker
-      run: |
-        pip install -q kodi-addon-checker
-    - name: Check with addon-checker
-      run: |
-        kodi-addon-checker --branch krypton
-    - name: Install addon submitter
-      run: |
-        pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
-    - name: Submit addon
-      run: |
-        submit-addon -r repo-scripts -b krypton -m -s --pull-request weather.gismeteo
-      env:
-        GH_USERNAME: vlmaksime
-        GH_TOKEN: ${{ secrets.gh_token }}
-        EMAIL: vl.maksime@gmail.com
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Generate distribution zip and submit to official kodi repository
+      id: kodi-addon-submitter
+      uses: xbmc/action-kodi-addon-submitter@v1.3
+      with: # Replace all the below variables
+        kodi-repository: repo-scripts
+        kodi-version: krypton
+        addon-id: weather.gismeteo
+        kodi-matrix: true # Submit a Python 2/3 compatible addon to matrix branch in addition to the target branch
+        sub-directory: true
+      env: # Make sure you create the below secrets (GH_TOKEN and EMAIL)
+        GH_USERNAME: ${{ github.actor }}
+        GH_TOKEN: ${{secrets.GH_TOKEN}}
+        EMAIL: ${{secrets.EMAIL}}
