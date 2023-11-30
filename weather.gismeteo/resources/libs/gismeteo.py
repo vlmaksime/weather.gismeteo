@@ -129,7 +129,7 @@ class GismeteoClient(object):
         result['cloudiness'] = xml_values.attrib['cl']
         result['storm'] = (xml_values.attrib['ts'] == '1')
         result['precipitation'] = {'type': xml_values.attrib['pt'],
-                                   'amount': xml_values.attrib.get('prflt'),
+                                   'amount': self._get_float(xml_values.attrib.get('prflt')),
                                    'intensity': xml_values.attrib['pr'],
                                    }
         if xml_values.attrib.get('ph') is not None \
@@ -171,12 +171,12 @@ class GismeteoClient(object):
                                 },
                    'pressure': {'min': self._get_int(xml_day.attrib['pmin']),
                                 'max': self._get_int(xml_day.attrib['pmax']),
-                                'avg': self._get_int(xml_day.attrib['p']),
+                                'avg': self._get_int(xml_day.attrib.get('p')),
                                 },
                    'cloudiness': xml_day.attrib['cl'],
                    'storm': (xml_day.attrib['ts'] == '1'),
                    'precipitation': {'type': xml_day.attrib['pt'],
-                                     'amount': xml_day.attrib['prflt'],
+                                     'amount': self._get_float(xml_day.attrib.get('prflt')),
                                      'intensity': xml_day.attrib['pr'],
                                      },
                    'icon': xml_day.attrib['icon'],
@@ -205,6 +205,9 @@ class GismeteoClient(object):
 
     @staticmethod
     def _get_int(value):
+        if value is None:
+            return 0
+
         try:
             return int(value)
         except ValueError:
@@ -212,6 +215,9 @@ class GismeteoClient(object):
 
     @staticmethod
     def _get_float(value):
+        if value is None:
+            return 0.0
+
         try:
             return float(value)
         except ValueError:

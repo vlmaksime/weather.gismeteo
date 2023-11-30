@@ -126,13 +126,17 @@ def set_item_info(props, item, item_type, icon='%s.png', day_temp=None):
         props['FeelsLike'] = weather.TEMP(item['temperature']['comfort']) + weather.TEMPUNIT
 
     if day_temp is not None:
-        if 'TempMorn' in keys:
+        if 'TempMorn' in keys \
+                and day_temp.get('morn') is not None:
             props['TempMorn'] = weather.TEMP(day_temp['morn']) + weather.TEMPUNIT
-        if 'TempDay' in keys:
+        if 'TempDay' in keys \
+                and day_temp.get('day') is not None:
             props['TempDay'] = weather.TEMP(day_temp['day']) + weather.TEMPUNIT
-        if 'TempEve' in keys:
+        if 'TempEve' in keys \
+                and day_temp.get('eve') is not None:
             props['TempEve'] = weather.TEMP(day_temp['eve']) + weather.TEMPUNIT
-        if 'TempNight' in keys:
+        if 'TempNight' in keys \
+                and day_temp.get('night') is not None:
             props['TempNight'] = weather.TEMP(day_temp['night']) + weather.TEMPUNIT
 
     # Humidity
