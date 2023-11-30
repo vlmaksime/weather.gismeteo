@@ -74,6 +74,10 @@ class Dialogs(object):
         return progress
 
     @staticmethod
+    def dialog_select(heading, _list, **kwargs):
+        return xbmcgui.Dialog().select(heading, _list, **kwargs)
+
+    @staticmethod
     def _join_strings(line1, line2="", line3=""):
 
         lines = [line1]
