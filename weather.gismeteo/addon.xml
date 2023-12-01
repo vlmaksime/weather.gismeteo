@@ -14,6 +14,7 @@
 		<summary lang="sv_SE">Gismeteo Weather Forecast. Realtidsväder och detaljerade prognoser över hela världen</summary>
 		<summary lang="is_IS">Gismeteo veðurspá. Rauntíma veðurlýsing og nákvæmar veðurspár um víða veröld</summary>
 		<summary lang="de_DE">Gismeteo Wettervorhersage. Echtzeitwetter und detailierte Vorhersagen auf der ganzen Welt</summary>
+		<summary lang="nl_NL">Gismeteo Weersverwachting. Realtime weer en gedetailleerde voorspelling over de hele wereld</summary>
 		<description lang="en_GB">The weather is provided solely for personal non-commercial use</description>
 		<description lang="ru_RU">Погода предоставлена исключительно для личного некоммерческого использования</description>
 		<description lang="es_ES">El clima se proporciona únicamente para su uso personal y no comercial</description>
@@ -21,6 +22,7 @@
 		<description lang="sv_SE">Vädret tillhandahålls enbart för personligt, icke-kommersiellt bruk</description>
 		<description lang="is_IS">Veðurupplýsingarnar eru einungis til einkanota og ekki í hagnaðarskyni</description>
 		<description lang="de_DE">Das Wetter wird nur für persönlichen, nicht-kommerziellen Gebrauch zur Verfügung gestellt</description>
+		<description lang="nl_NL">Het weer wordt uitsluitend verstrekt voor persoonlijk, niet-commercieel gebruik</description>
 		<disclaimer lang="en_GB">The weather forecast has been prepared by MapMakers Group Ltd</disclaimer>
 		<disclaimer lang="ru_RU">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
 		<disclaimer lang="es_ES">El pronóstico del tiempo ha sido preparado por MapMakers Group Ltd</disclaimer>
@@ -28,6 +30,7 @@
 		<disclaimer lang="sv_SE">Väderprognosen har utarbetats av MapMakers Group Ltd.</disclaimer>
 		<disclaimer lang="is_IS">Veðurspáin var útbúin af MapMakers Group Ltd</disclaimer>
 		<disclaimer lang="de_DE">Die Wettervorhersage wurde von MapMakers Group Ltd vorbereitet</disclaimer>
+		<disclaimer lang="nl_NL">De weersvoorspelling is opgesteld door MapMakers Group Ltd</disclaimer>
 		<platform>all</platform>
 		<license>GPL-3.0-only</license>
 		<forum>https://forum.kodi.tv/showthread.php?tid=323624</forum>
