@@ -14,7 +14,7 @@
 		<setting id="Location5ID" type="text" visible="false" default=""/>
 	</category>
 	<category label="32102">
-		<setting id="Language" label="32299" type="select" lvalues="32200|32201|32202|32203|32204|32205|32206|32207|32208" default="0"/>
+		<setting id="Language" label="32299" type="select" lvalues="32200|32201|32202|32203|32204|32205|32206|32207|32208|32209" default="0"/>
 		<setting id="Weekend" label="32122" type="enum" lvalues="32123|32124|32125" default="0"/>
 		<setting id="TimeZone" label="32130" type="enum" lvalues="32131|32132" default="0"/>
 		<setting label="32133" type="lsep"/>
