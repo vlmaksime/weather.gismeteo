@@ -14,6 +14,7 @@
 		<summary lang="fr">Gismeteo prévisions météorologiques. Prévisions météorologiques en temps réel à travers le monde.</summary>
 		<summary lang="sv">Gismeteo Weather Forecast. Realtidsväder och detaljerade prognoser över hela världen</summary>
 		<summary lang="is">Gismeteo veðurspá. Rauntíma veðurlýsing og nákvæmar veðurspár um víða veröld</summary>
+		<summary lang="nl">Gismeteo Weersverwachting. Realtime weer en gedetailleerde voorspelling over de hele wereld</summary>
 		<description lang="de">Das Wetter wird nur für persönlichen, nicht-kommerziellen Gebrauch zur Verfügung gestellt</description>
 		<description lang="en">The weather is provided solely for personal non-commercial use</description>
 		<description lang="ru">Погода предоставлена исключительно для личного некоммерческого использования</description>
@@ -21,6 +22,7 @@
 		<description lang="fr">La météo est fournie pour un usage personnel non-commercial.</description>
 		<description lang="sv">Vädret tillhandahålls enbart för personligt, icke-kommersiellt bruk</description>
 		<description lang="is">Veðurupplýsingarnar eru einungis til einkanota og ekki í hagnaðarskyni</description>
+		<description lang="nl">Het weer wordt uitsluitend verstrekt voor persoonlijk, niet-commercieel gebruik</description>
 		<disclaimer lang="de">Die Wettervorhersage wurde von MapMakers Group Ltd vorbereitet</disclaimer>
 		<disclaimer lang="en">The weather forecast has been prepared by MapMakers Group Ltd</disclaimer>
 		<disclaimer lang="ru">Прогноз погоды подготовлен НПЦ "Мэп Мейкер"</disclaimer>
@@ -28,6 +30,7 @@
 		<disclaimer lang="fr">Les prévisions météorologiques sont mises à disposition par MapMakers Group Ltd</disclaimer>
 		<disclaimer lang="sv">Väderprognosen har utarbetats av MapMakers Group Ltd.</disclaimer>
 		<disclaimer lang="is">Veðurspáin var útbúin af MapMakers Group Ltd</disclaimer>
+		<disclaimer lang="nl">De weersvoorspelling is opgesteld door MapMakers Group Ltd</disclaimer>
 		<platform>all</platform>
 		<license>GPL-3.0-only</license>
 		<forum>http://xbmc.ru/forum/showthread.php?t=14692</forum>
