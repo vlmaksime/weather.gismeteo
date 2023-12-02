@@ -1,0 +1,279 @@
+# Kodi Media Center language file
+# Addon Name: Gismeteo
+# Addon id: weather.gismeteo
+# Addon Provider: vl.maksime
+
+msgid ""
+msgstr ""
+
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
+
+# Categories
+
+msgctxt "#32101"
+msgid "Location setup"
+msgstr "Locatie setup"
+
+msgctxt "#32102"
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+msgctxt "#32103"
+msgid "Expert"
+msgstr "Expert"
+
+# Location setup
+
+msgctxt "#32110"
+msgid "Current Location"
+msgstr "Huidige Locatie"
+
+msgctxt "#32111"
+msgid "Location 1"
+msgstr "Locatie 1"
+
+msgctxt "#32112"
+msgid "Location 2"
+msgstr "Locatie 2"
+
+msgctxt "#32113"
+msgid "Location 3"
+msgstr "Locatie 3"
+
+msgctxt "#32114"
+msgid "Location 4"
+msgstr "Locatie 4"
+
+msgctxt "#32115"
+msgid "Location 5"
+msgstr "Locatie 5"
+
+msgctxt "#32116"
+msgid "Location 1 ID"
+msgstr "Locatie 1 ID"
+
+msgctxt "#32117"
+msgid "Location 2 ID"
+msgstr "Locatie 2 ID"
+
+msgctxt "#32118"
+msgid "Location 3 ID"
+msgstr "Locatie 3 ID"
+
+msgctxt "#32119"
+msgid "Location 4 ID"
+msgstr "Locatie 4 ID"
+
+msgctxt "#32120"
+msgid "Location 5 ID"
+msgstr "Locatie 5 ID"
+
+# Advanced
+
+msgctxt "#32122"
+msgid "Weekend"
+msgstr "Weekend"
+
+msgctxt "#32123"
+msgid "Saturday/Sunday"
+msgstr "Zaterdag/Zondag"
+
+msgctxt "#32124"
+msgid "Friday/Saturday"
+msgstr "Vrijdag/Zaterdag"
+
+msgctxt "#32125"
+msgid "Thursday/Friday"
+msgstr "Donderdag/Vrijdag"
+
+msgctxt "#32130"
+msgid "Time zone"
+msgstr "Tijd zone"
+
+msgctxt "#32131"
+msgid "from system settings"
+msgstr "vanuit systeem instellingen"
+
+msgctxt "#32132"
+msgid "from location"
+msgstr "vanuit locatie"
+
+msgctxt "#32133"
+msgid "Measure units"
+msgstr "Meet eenheden"
+
+msgctxt "#32134"
+msgid "Pressure"
+msgstr "Druk"
+
+msgctxt "#32135"
+msgid "Precipitation"
+msgstr "Neerslag"
+
+msgctxt "#32136"
+msgid "Clear cache"
+msgstr "Cache legen"
+
+msgctxt "#32200"
+msgid "User interface language"
+msgstr "Gebruikers interface taal"
+
+msgctxt "#32201"
+msgid "Russian"
+msgstr "Russisch"
+
+msgctxt "#32202"
+msgid "Ukrainian"
+msgstr "Oekraïens"
+
+msgctxt "#32203"
+msgid "Lithuanian"
+msgstr "Litouws"
+
+msgctxt "#32204"
+msgid "Latvian"
+msgstr ""
+
+msgctxt "#32205"
+msgid "English"
+msgstr "Engels"
+
+msgctxt "#32206"
+msgid "Romanian"
+msgstr "Roemeens"
+
+msgctxt "#32207"
+msgid "German"
+msgstr "Duits"
+
+msgctxt "#32208"
+msgid "Polish"
+msgstr "Pools"
+
+msgctxt "#32209"
+msgid "Dutch"
+msgstr "Nederlands"
+
+msgctxt "#32220"
+msgid "Gismeteo icons"
+msgstr "Gismeteo iconen"
+
+msgctxt "#32221"
+msgid "Use Gismeteo icons"
+msgstr "Gebruik Gismeteo iconen"
+
+msgctxt "#32222"
+msgid "Install icon package"
+msgstr "Installeer icoon pakket"
+
+msgctxt "#32223"
+msgid "Requires Kodi 16+ and skin support"
+msgstr "Vereist Kodi 16+ en skin ondersteuning"
+
+msgctxt "#32299"
+msgid "Language"
+msgstr "Taal"
+
+msgctxt "#32301"
+msgid "a/p"
+msgstr "a/p"
+
+# Speed
+
+msgctxt "#32401"
+msgid "m/s"
+msgstr "m/s"
+
+msgctxt "#32402"
+msgid "km/h"
+msgstr "km/h"
+
+msgctxt "#32403"
+msgid "m/min"
+msgstr "m/min"
+
+msgctxt "#32404"
+msgid "ft/h"
+msgstr "ft/h"
+
+msgctxt "#32405"
+msgid "ft/min"
+msgstr "ft/min"
+
+msgctxt "#32406"
+msgid "ft/s"
+msgstr "ft/s"
+
+msgctxt "#32407"
+msgid "knots"
+msgstr ""
+
+msgctxt "#32408"
+msgid "Beaufort"
+msgstr ""
+
+msgctxt "#32409"
+msgid "inch/s"
+msgstr ""
+
+msgctxt "#32410"
+msgid "yard/s"
+msgstr ""
+
+msgctxt "#32411"
+msgid "Furlong/Fortnight"
+msgstr ""
+
+msgctxt "#32412"
+msgid "mph"
+msgstr ""
+
+msgctxt "#32413"
+msgid "kts"
+msgstr ""
+
+# Wind direction
+
+msgctxt "#32420"
+msgid "calm"
+msgstr "kalm"
+
+# Precipitation
+
+msgctxt "#32430"
+msgid "mm"
+msgstr ""
+
+msgctxt "#32431"
+msgid "inch"
+msgstr ""
+
+msgctxt "#32432"
+msgid "n/a"
+msgstr ""
+
+# Pressure
+
+msgctxt "#32440"
+msgid "mmHg"
+msgstr ""
+
+msgctxt "#32441"
+msgid "hPa"
+msgstr ""
+
+msgctxt "#32442"
+msgid "mbar"
+msgstr ""
+
+msgctxt "#32443"
+msgid "inHg"
+msgstr ""
+
+# Messages
+
+msgctxt "#32501"
+msgid "Connection error"
+msgstr "Connectie error"
